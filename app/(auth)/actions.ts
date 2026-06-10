@@ -1,0 +1,108 @@
+"use server";
+
+import { redirect } from "next/navigation";
+
+import { api } from "@/lib/api/client";
+import { ApiError } from "@/lib/api/errors";
+import { setToken } from "@/lib/auth/session";
+
+/**
+ * Shape returned by the Laravel login/register endpoints.
+ *
+ * Adjust to match your backend. Common variants:
+ *   - Sanctum personal access token: `{ token: string }` (or `plainTextToken`)
+ *   - Passport: `{ access_token: string }`
+ *   - Wrapped in a resource: `{ data: { token: string } }`
+ */
+interface AuthTokenResponse {
+  token: string;
+}
+
+/** State passed back to the form via `useActionState`. */
+export interface AuthFormState {
+  /** Top-level error (invalid credentials, network, etc.). */
+  error?: string;
+  /** Field-keyed validation messages from a Laravel 422 response. */
+  fieldErrors?: Record<string, string[]>;
+  /** Submitted values to repopulate the form after an error. */
+  values?: Record<string, string>;
+}
+
+/** Where to send the user after a successful auth. */
+const AFTER_AUTH_REDIRECT = "/";
+
+export async function login(
+  _prevState: AuthFormState,
+  formData: FormData,
+): Promise<AuthFormState> {
+  const email = String(formData.get("email") ?? "").trim();
+  const password = String(formData.get("password") ?? "");
+  const values = { email };
+
+  if (!email || !password) {
+    return { error: "Email and password required to fill.", values };
+  }
+
+  try {
+    const res = await api.post<AuthTokenResponse>(
+      "/auth/login",
+      { email, password },
+      { skipAuth: true },
+    );
+    await setToken(res.token);
+  } catch (error) {
+    return { ...toAuthError(error), values };
+  }
+
+  // `redirect` throws a control-flow signal, so it must run outside the
+  // try/catch above — otherwise the catch would swallow it.
+  redirect(AFTER_AUTH_REDIRECT);
+}
+
+export async function register(
+  _prevState: AuthFormState,
+  formData: FormData,
+): Promise<AuthFormState> {
+  const name = String(formData.get("name") ?? "").trim();
+  const email = String(formData.get("email") ?? "").trim();
+  const password = String(formData.get("password") ?? "");
+  const passwordConfirmation = String(formData.get("password_confirmation") ?? "");
+  const values = { name, email };
+
+  if (!name || !email || !password) {
+    return { error: "All fields required to fill.", values };
+  }
+  if (password !== passwordConfirmation) {
+    return {
+      fieldErrors: { password_confirmation: ["Password confirmation doesn't match"] },
+      values,
+    };
+  }
+
+  try {
+    const res = await api.post<AuthTokenResponse>(
+      "/auth/register",
+      { name, email, password, password_confirmation: passwordConfirmation },
+      { skipAuth: true },
+    );
+    await setToken(res.token);
+  } catch (error) {
+    return { ...toAuthError(error), values };
+  }
+
+  redirect(AFTER_AUTH_REDIRECT);
+}
+
+/** Translate an API failure into form state. */
+function toAuthError(error: unknown): AuthFormState {
+  if (error instanceof ApiError) {
+    if (error.status === 401) {
+      return { error: "Email or password is incorrect" };
+    }
+    if (error.validationErrors) {
+      return { fieldErrors: error.validationErrors, error: error.message };
+    }
+    return { error: error.message };
+  }
+  return { error: "Couldn't connect to the server. Please try again later." };
+}
