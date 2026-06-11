@@ -11,7 +11,7 @@ import { serverEnv } from "@/lib/env";
 async function checkApi(): Promise<{ ok: boolean; detail: string }> {
   try {
     // Hits the API root. Swap for a real endpoint such as `/health` or `/user`.
-    await api.get("/ping", { skipAuth: true });
+    await api.get("/", { skipAuth: true });
     return { ok: true, detail: "Connected" };
   } catch (error) {
     if (error instanceof ApiError) {

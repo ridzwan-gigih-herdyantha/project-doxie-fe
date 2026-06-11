@@ -30,6 +30,7 @@ export interface AuthFormState {
 
 /** Where to send the user after a successful auth. */
 const AFTER_AUTH_REDIRECT = "/";
+const AFTER_REGISTER_REDIRECT = "/login";
 
 export async function login(
   _prevState: AuthFormState,
@@ -90,7 +91,7 @@ export async function register(
     return { ...toAuthError(error), values };
   }
 
-  redirect(AFTER_AUTH_REDIRECT);
+  redirect(AFTER_REGISTER_REDIRECT);
 }
 
 /** Translate an API failure into form state. */
