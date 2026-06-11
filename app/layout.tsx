@@ -4,6 +4,9 @@ import { Hanken_Grotesk, JetBrains_Mono, Inter } from "next/font/google";
 
 import "@/app/globals.css";
 
+import { Toaster } from "@/components/ui/sonner";
+import { CheckCircle2Icon } from "lucide-react";
+
 const hankenGrotesk = Hanken_Grotesk({
   subsets: ["latin"],
   variable: "--font-hanken-grotesk",
@@ -64,7 +67,15 @@ export default function RootLayout({
       lang="en"
       className={`dark ${hankenGrotesk.variable} ${liberationSerif.variable} ${jetBrainsMono.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <Toaster
+          position="top-right"
+          duration={3000}
+          closeButton={true}
+          icons={{ success: <CheckCircle2Icon className="size-4" /> }}
+        />
+      </body>
     </html>
   );
 }

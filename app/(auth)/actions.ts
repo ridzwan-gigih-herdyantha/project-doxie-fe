@@ -1,7 +1,5 @@
 "use server";
 
-import { redirect } from "next/navigation";
-
 import { api } from "@/lib/api/client";
 import { ApiError } from "@/lib/api/errors";
 import { setToken } from "@/lib/auth/session";
@@ -26,11 +24,9 @@ export interface AuthFormState {
   fieldErrors?: Record<string, string[]>;
   /** Submitted values to repopulate the form after an error. */
   values?: Record<string, string>;
+  /** Set on a successful auth so the client can toast + navigate. */
+  success?: boolean;
 }
-
-/** Where to send the user after a successful auth. */
-const AFTER_AUTH_REDIRECT = "/";
-const AFTER_REGISTER_REDIRECT = "/login";
 
 export async function login(
   _prevState: AuthFormState,
@@ -55,9 +51,7 @@ export async function login(
     return { ...toAuthError(error), values };
   }
 
-  // `redirect` throws a control-flow signal, so it must run outside the
-  // try/catch above — otherwise the catch would swallow it.
-  redirect(AFTER_AUTH_REDIRECT);
+  return { success: true };
 }
 
 export async function register(
@@ -91,7 +85,7 @@ export async function register(
     return { ...toAuthError(error), values };
   }
 
-  redirect(AFTER_REGISTER_REDIRECT);
+  return { success: true };
 }
 
 /** Translate an API failure into form state. */

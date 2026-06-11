@@ -1,6 +1,8 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { register, type AuthFormState } from "@/app/(auth)/actions";
 import { AuthField } from "@/app/(auth)/_components/auth-field";
@@ -11,6 +13,14 @@ const initialState: AuthFormState = {};
 
 export function RegisterForm() {
   const [state, formAction] = useActionState(register, initialState);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (state.success) {
+      toast.success("Account created successfully! Please sign in.");
+      router.push("/login");
+    }
+  }, [state.success, router]);
 
   return (
     <form action={formAction} className="flex flex-col gap-4" noValidate>
