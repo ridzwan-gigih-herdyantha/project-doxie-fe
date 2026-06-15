@@ -104,7 +104,7 @@ export function AppSidebar() {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarSeparator/>
+      <SidebarSeparator className="mb-2"/>
       <SidebarFooter>
         <SidebarMenu className="gap-1">
           {NAV_FOOTER.map((section) => {

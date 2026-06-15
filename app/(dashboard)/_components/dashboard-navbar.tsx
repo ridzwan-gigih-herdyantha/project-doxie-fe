@@ -17,14 +17,10 @@ export function DashboardNavbar() {
     <header className="flex h-14 shrink-0 items-center gap-3 border-b border-border bg-[#0F1623] px-4">
       <SidebarTrigger className="-ml-1" />
       <Separator orientation="vertical" className="mr-1 data-[orientation=vertical]:h-full" />
-      <h1 className="text-sm font-semibold text-foreground">{section.title}</h1>
+      {/* <h1 className="text-sm font-semibold text-foreground">{section.title}</h1> */}
 
-      <div className="ml-auto flex items-center gap-2">
+      <div className="flex w-full">
         {Actions ? <Actions /> : null}
-
-        <Button variant="ghost" size="icon" aria-label="Notifications">
-          <Bell />
-        </Button>
       </div>
     </header>
   );

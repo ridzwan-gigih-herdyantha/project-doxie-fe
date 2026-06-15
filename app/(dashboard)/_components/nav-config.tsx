@@ -9,8 +9,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { ModelDropdown } from "@/app/(dashboard)/_components/navbar/model-dropdown";
-import { SearchDocuments } from "@/app/(dashboard)/_components/navbar/search-documents";
+import { ChatNavbar } from "@/app/(dashboard)/_components/navbar/chat-navbar";
+import { DocumentNavbar } from "@/app/(dashboard)/_components/navbar/document-navbar";
 
 /**
  * Single source of truth for the dashboard navigation.
@@ -49,7 +49,7 @@ export const NAV_SECTIONS: NavSection[] = [
     href: "/documents",
     icon: FileText,
     title: "Documents",
-    Actions: SearchDocuments,
+    Actions: DocumentNavbar,
   },
   {
     key: "chats",
@@ -57,7 +57,7 @@ export const NAV_SECTIONS: NavSection[] = [
     href: "/chats",
     icon: MessagesSquare,
     title: "Chats",
-    Actions: ModelDropdown,
+    Actions: ChatNavbar,
   },
 ];
 
