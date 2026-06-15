@@ -4,19 +4,18 @@ import { api } from "@/lib/api/client";
 import { ApiError } from "@/lib/api/errors";
 import { setToken } from "@/lib/auth/session";
 
-/**
- * Shape returned by the Laravel login/register endpoints.
- *
- * Adjust to match your backend. Common variants:
- *   - Sanctum personal access token: `{ token: string }` (or `plainTextToken`)
- *   - Passport: `{ access_token: string }`
- *   - Wrapped in a resource: `{ data: { token: string } }`
- */
-interface AuthTokenResponse {
-  token: string;
+interface AuthResponse {
+  success: boolean;
+  message: string;
+  data: { 
+    user: 
+    { 
+      id: number; name: string; email: string
+    },
+    token: string 
+  };
 }
 
-/** State passed back to the form via `useActionState`. */
 export interface AuthFormState {
   /** Top-level error (invalid credentials, network, etc.). */
   error?: string;
@@ -41,12 +40,12 @@ export async function login(
   }
 
   try {
-    const res = await api.post<AuthTokenResponse>(
+    const res = await api.post<AuthResponse>(
       "/auth/login",
       { email, password },
       { skipAuth: true },
     );
-    await setToken(res.token);
+    await setToken(res.data?.token);
   } catch (error) {
     return { ...toAuthError(error), values };
   }
@@ -75,12 +74,12 @@ export async function register(
   }
 
   try {
-    const res = await api.post<AuthTokenResponse>(
+    const res = await api.post<AuthResponse>(
       "/auth/register",
       { name, email, password, password_confirmation: passwordConfirmation },
       { skipAuth: true },
     );
-    await setToken(res.token);
+    await setToken(res.data?.token);
   } catch (error) {
     return { ...toAuthError(error), values };
   }

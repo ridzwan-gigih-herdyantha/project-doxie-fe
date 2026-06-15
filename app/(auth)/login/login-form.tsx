@@ -17,10 +17,10 @@ export function LoginForm() {
   const [state, formAction] = useActionState(login, initialState);
   const router = useRouter();
 
-  useEffect(() => {
+  useEffect(() => {    
     if (state.success) {
       toast.success("Signed in successfully!");
-      router.push("/");
+      router.push("/dashboard");
     }
   }, [state.success, router]);
 
