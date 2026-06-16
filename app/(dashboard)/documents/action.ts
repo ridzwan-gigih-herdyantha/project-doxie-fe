@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { api } from "@/lib/api/client";
 import { ApiError } from "@/lib/api/errors";
 
-interface dataDocument {
+export interface dataDocument {
     id: number;
     user_id: number;
     title: string;
@@ -19,18 +19,20 @@ interface dataDocument {
 }
 
 export interface successListDocumentsResponse {
-    success: boolean;
+    success: true;
     message: string;
     data: dataDocument[];
 }
 
 export interface errorListDocumentsResponse {
-    success: boolean;
+    success: false;
     message: string;
     errors?: Record<string, string[]>;
 }
 
-export type documentsResult = successListDocumentsResponse | errorListDocumentsResponse;
+export type documentsResult = 
+| successListDocumentsResponse 
+| errorListDocumentsResponse;
 
 export async function deleteDocument(id: string) {
     try {
