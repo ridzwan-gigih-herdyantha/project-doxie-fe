@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import StatCard from "./_components/stat-card";
 import { Separator } from "@/components/ui/separator";
 import { listDocuments } from "../documents/action";
+import DocumentCard from "./_components/document-card";
+import UploadDocumentCard from "./_components/upload-document-card";
 
 export default async function DashboardPage() {
   const result = await listDocuments();
@@ -52,8 +54,15 @@ export default async function DashboardPage() {
       </div>
 
       <div className="flex flex-row gap-6 items-center mt-6">
-        <h2 className="text-xl font-semibold tracking-tight">Documents</h2>
+        <h2 className="text-xl font-semibold tracking-tight">Recent Documents</h2>
         <Separator className="flex-1" />
+      </div>
+
+      <div className="mt-2 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {documents.slice(0, 3).map((doc) => (
+          <DocumentCard key={doc.id} doc={doc} />
+        ))}
+        <UploadDocumentCard />
       </div>
     </div>
   );

@@ -1,7 +1,5 @@
 "use server";
 
-import { redirect } from "next/navigation";
-
 import { api } from "@/lib/api/client";
 import { ApiError } from "@/lib/api/errors";
 
@@ -36,7 +34,7 @@ export type documentsResult =
 
 export async function deleteDocument(id: string) {
     try {
-        await api.delete(`/documents/${id}`);
+        return await api.delete(`/documents/${id}`);
     } catch (error) {
         if (error instanceof ApiError) {
             return {
@@ -50,7 +48,6 @@ export async function deleteDocument(id: string) {
             message: "Couldn't reach the server. Please try again.",
         };
     }
-    redirect("/documents");
 }
 
 export async function listDocuments(): Promise<documentsResult>{
