@@ -6,6 +6,8 @@ import { Separator } from "@/components/ui/separator";
 import { listDocuments } from "../documents/action";
 import DocumentCard from "./_components/document-card";
 import UploadDocumentCard from "./_components/upload-document-card";
+import RecentActivity from "./_components/recent-activity";
+import UpgradeCard from "./_components/upgrade-card";
 
 export default async function DashboardPage() {
   const result = await listDocuments();
@@ -63,6 +65,11 @@ export default async function DashboardPage() {
           <DocumentCard key={doc.id} doc={doc} />
         ))}
         <UploadDocumentCard />
+      </div>
+
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <RecentActivity className="lg:col-span-2" />
+        <UpgradeCard />
       </div>
     </div>
   );
