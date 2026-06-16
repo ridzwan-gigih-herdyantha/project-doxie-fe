@@ -1,3 +1,4 @@
+import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 function StatCardSkeleton() {
@@ -9,6 +10,19 @@ function StatCardSkeleton() {
       </div>
       <Skeleton className="size-12 rounded-lg" />
     </div>
+  );
+}
+
+function DocumentCardSkeleton() {
+  return (
+    <Card className="gap-3 p-3">
+      <Skeleton className="h-28 w-full rounded-lg" />
+      <div className="flex flex-col gap-1.5">
+        <Skeleton className="h-3.5 w-3/4" />
+        <Skeleton className="h-3 w-1/3" />
+      </div>
+      <Skeleton className="h-9 w-full rounded-md" />
+    </Card>
   );
 }
 
@@ -32,6 +46,14 @@ export default function DashboardLoading() {
       <div className="mt-6 flex flex-row items-center gap-6">
         <Skeleton className="h-6 w-28" />
         <div className="h-px flex-1 bg-border" />
+      </div>
+
+      {/* Documents */}
+      <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <DocumentCardSkeleton />
+        <DocumentCardSkeleton />
+        <DocumentCardSkeleton />
+        <DocumentCardSkeleton />
       </div>
     </div>
   );

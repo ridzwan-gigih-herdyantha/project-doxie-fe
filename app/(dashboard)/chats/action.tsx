@@ -3,6 +3,19 @@
 import { api } from "@/lib/api/client";
 import { ApiError } from "@/lib/api/errors";
 
+// TODO: Chat session get API
+export interface Chat {
+    id: string;
+    name: string;
+    messages: string[];
+}
+
+export interface successListChatsResponse {
+    success: true;
+    message: string;
+    data: Chat[];
+}
+
 export async function deleteChat(id: string) {
     try {
         return await api.delete(`/chats/${id}`);
@@ -23,6 +36,7 @@ export async function deleteChat(id: string) {
 
 export async function listChats() {
     try {
+        // TODO: Chat list get API
         return await api.get<successListChatsResponse>("/chats");
     } catch (error) {
         if (error instanceof ApiError) {
