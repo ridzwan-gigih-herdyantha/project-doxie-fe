@@ -76,7 +76,7 @@ export default function NewDocumentButton() {
                     onClick={handleFileInput}
                     size={collapsed ? "icon" : "default"}
                     className={cn(
-                        "gap-2 bg-[#68DBA9] text-[#141B2B] hover:bg-[#68DBA9]/90",
+                        "gap-2 bg-[#68DBA9] text-[#141B2B] hover:bg-[#68DBA9]/80",
                         !collapsed && "w-full",
                     )}
                 >
