@@ -13,9 +13,9 @@ import NotificationBell from "./notif-button";
 import { ChevronDown } from "lucide-react";
 
 const MODELS = [
-  { id: "gpt-4o", label: "GPT-4.0" },
-  { id: "claude-opus-4-7", label: "Claude Opus 4.7" },
-  { id: "gemini-3-1", label: "Gemini 3.1" },
+  { id: "gpt-4o", label: "ChatGPT 4.0" },
+  { id: "claude-3-5-sonnet-20241022", label: "Claude 3.5 Sonnet" },
+  { id: "gemini-2.5-flash", label: "Gemini 2.5 Flash" },
 ]
 
 export function ChatNavbar() {
