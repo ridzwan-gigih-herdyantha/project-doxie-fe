@@ -21,6 +21,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { useState } from "react";
+import NewDocumentButton from "./new-document-button";
 
 
 export function AppSidebar() {
@@ -53,6 +54,9 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
+        <SidebarGroup>
+          <NewDocumentButton/>
+        </SidebarGroup>
         <SidebarGroup>
           {/* <SidebarGroupLabel>Menu</SidebarGroupLabel> */}
           <SidebarMenu className="gap-1">

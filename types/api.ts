@@ -8,6 +8,8 @@
 
 /** A single-resource response: `return new UserResource($user);` */
 export interface ApiResource<T> {
+  success: boolean;
+  message: string;
   data: T;
 }
 

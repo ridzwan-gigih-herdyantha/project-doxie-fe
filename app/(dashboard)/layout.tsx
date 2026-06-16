@@ -22,7 +22,15 @@ export default async function DashboardLayout({
   const defaultOpen = cookieStore.get("sidebar_state")?.value !== "false";
 
   return (
-    <SidebarProvider defaultOpen={defaultOpen}>
+    <SidebarProvider
+      defaultOpen={defaultOpen}
+      style={
+        {
+          "--sidebar-width": "14rem",
+          "--sidebar-width-mobile": "12rem",
+        } as React.CSSProperties
+      }
+    >
       <AppSidebar/>
       <SidebarInset>
         <DashboardNavbar />

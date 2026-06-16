@@ -12,6 +12,7 @@ import { useState, useEffect} from "react"
 import NotificationBell from "./notif-button";
 import { ChevronDown } from "lucide-react";
 
+// AI ChatBot Models
 const MODELS = [
   { id: "gpt-4o", label: "ChatGPT 4.0" },
   { id: "claude-3-5-sonnet-20241022", label: "Claude 3.5 Sonnet" },
@@ -21,18 +22,18 @@ const MODELS = [
 export function ChatNavbar() {
     const [model, setModel] = useState<string>(MODELS[0].id);
     const selectedModel = MODELS.find(m => m.id === model)
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
 
     function handleOpenChange(open: boolean) {
       setIsOpen(open);
     }
 
-    useEffect(() => {
-      // Update chosen model
-      if (isOpen) {
+    // useEffect(() => {
+    //   // Update chosen model
+    //   if (isOpen) {
         
-      }
-    }, [model, isOpen]);
+    //   }
+    // }, [model, isOpen]);
 
     return (
       <div className="flex w-full justify-between items-center gap-2 p-2">
