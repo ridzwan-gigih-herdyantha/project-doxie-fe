@@ -39,3 +39,4 @@ function isValidationError(body: unknown): body is ApiValidationError {
     typeof (body as ApiValidationError).errors === "object"
   );
 }
+
