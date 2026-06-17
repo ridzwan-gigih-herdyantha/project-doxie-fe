@@ -16,7 +16,7 @@ export default function DocumentDetailLoading() {
       </div>
 
       {/* Chat panel */}
-      <aside className="flex h-full w-80 shrink-0 flex-col border-l border-border bg-sidebar">
+      <aside className="flex h-full w-7/12 shrink-0 flex-col border-l border-border bg-sidebar">
         <div className="flex items-center gap-2 border-b border-border px-4 py-3">
           <Skeleton className="size-4 rounded" />
           <div className="flex flex-col gap-1.5">

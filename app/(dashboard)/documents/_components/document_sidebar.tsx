@@ -6,6 +6,11 @@ import { MessageSquare, PanelRightClose, PanelRightOpen, Send } from "lucide-rea
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 export interface ChatMessage {
   id: string | number;
@@ -39,21 +44,25 @@ export function DocumentSidebar({
   if (!open) {
     return (
       <div className="flex h-full w-12 shrink-0 flex-col items-center gap-3 border-l border-border bg-sidebar pt-3">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setOpen(true)}
-          aria-label="Open document chat"
-        >
-          <PanelRightOpen />
-        </Button>
-        <MessageSquare className="size-4 text-muted-foreground" />
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setOpen(true)}
+                aria-label="Open document chat"
+              >
+                <MessageSquare className="size-4 text-muted-foreground" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="left">Open document chat</TooltipContent>
+          </Tooltip>
       </div>
     );
   }
 
   return (
-    <aside className="flex h-full w-80 shrink-0 flex-col border-l border-border bg-sidebar">
+    <aside className="flex h-full w-7/12 shrink-0 flex-col border-l border-border bg-sidebar">
       <header className="flex items-center justify-between gap-2 border-b border-border px-4 py-3">
         <div className="flex min-w-0 items-center gap-2">
           <MessageSquare className="size-4 shrink-0 text-[#68DBA9]" />
