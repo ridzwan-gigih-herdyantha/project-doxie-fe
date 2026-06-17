@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useChat, type ChatMessage } from "@/hooks/use-chat";
 import { getChatModel } from "@/lib/chat-model-store";
+import { Spinner } from "@/components/ui/spinner";
 
 export function DocumentSidebar({
   documentTitle = "Document",
@@ -101,7 +102,7 @@ export function DocumentSidebar({
                   : "bg-muted text-foreground",
               )}
             >
-              {m.content || (isStreaming ? "…" : "")}
+              {m.content || (isStreaming ? <Spinner className="size-4" /> : "")}
             </div>
           </div>
         ))}
