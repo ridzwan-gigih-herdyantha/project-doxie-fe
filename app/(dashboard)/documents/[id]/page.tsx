@@ -6,6 +6,7 @@ import { humanTime } from "@/lib/human-time";
 import { getDocument } from "../action";
 import { DocumentSidebar } from "../_components/document_sidebar";
 import { SetDocumentTitle } from "../_components/set-document-title";
+import { PdfViewerClient } from "../_components/pdf-viewer-client";
 
 function formatBytes(bytes: number): string {
   if (!bytes) return "0 B";
@@ -35,7 +36,7 @@ export default async function DocumentDetailPage({
       <SetDocumentTitle title={doc.title} />
 
       {/* Detail / viewer */}
-      <div className="min-w-0 flex-1 overflow-y-auto p-6">
+      <div className="min-w-0 flex-1 overflow-y-auto px-6 pt-4 pb-2">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <h2
@@ -61,11 +62,13 @@ export default async function DocumentDetailPage({
           </span>
         </div>
 
-        <div className="mt-4 flex h-[70vh] flex-col items-center justify-center gap-3 rounded-xl bg-background/50 text-muted-foreground ring-1 ring-foreground/5">
-          <FileText className="size-10 text-[#68DBA9]/70" />
-          <p className="text-sm">{doc.file_name}</p>
-          <p className="text-xs">PDF preview coming soon</p>
-        </div>
+        {/* TODO: point this at your real PDF endpoint. It goes through the
+            proxy so the auth cookie is attached. Adjust the path to match the
+            Laravel route that streams the file. */}
+        <PdfViewerClient
+          url={`/api/backend/documents/${doc.id}/download`}
+          className="mt-4 h-[75vh]"
+        />
       </div>
 
       <DocumentSidebar documentTitle={doc.title} />

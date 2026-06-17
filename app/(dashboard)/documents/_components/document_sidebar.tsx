@@ -18,6 +18,7 @@ export interface ChatMessage {
   content: string;
 }
 
+// TODO: Implement sidebar chat for document
 /** Placeholder until the document chat endpoint is wired up. */
 const SAMPLE: ChatMessage[] = [
   { id: 1, role: "assistant", content: "Hi! Ask me anything about this document." },
