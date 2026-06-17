@@ -1,5 +1,7 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+
 import { api } from "@/lib/api/client";
 import { ApiError } from "@/lib/api/errors";
 
@@ -28,19 +30,53 @@ export interface errorListDocumentsResponse {
     errors?: Record<string, string[]>;
 }
 
-export type documentsResult = 
-| successListDocumentsResponse 
+export type documentsResult =
+| successListDocumentsResponse
 | errorListDocumentsResponse;
 
-export async function deleteDocument(id: string) {
+export interface successGetDocumentResponse {
+    success: true;
+    message: string;
+    data: dataDocument;
+}
+
+export type documentResult =
+| successGetDocumentResponse
+| errorListDocumentsResponse;
+
+export async function getDocument(id: string): Promise<documentResult> {
     try {
-        return await api.delete(`/documents/${id}`);
+        return await api.get<successGetDocumentResponse>(`/documents/${id}`);
     } catch (error) {
         if (error instanceof ApiError) {
             return {
                 success: false,
                 message: error.message,
+                errors: error.validationErrors ?? undefined,
             };
+        }
+
+        return {
+            success: false,
+            message: "Couldn't reach the server. Please try again.",
+        };
+    }
+}
+
+export async function deleteDocument(
+    id: string,
+): Promise<{ success: boolean; message: string }> {
+    try {
+        const res = await api.delete<{ message?: string }>(`/documents/${id}`);
+
+        // Refresh every route that lists documents.
+        revalidatePath("/dashboard");
+        revalidatePath("/documents");
+
+        return { success: true, message: res?.message ?? "Document deleted." };
+    } catch (error) {
+        if (error instanceof ApiError) {
+            return { success: false, message: error.message };
         }
 
         return {

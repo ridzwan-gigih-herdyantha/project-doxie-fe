@@ -5,8 +5,19 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import type { dataDocument } from "../../documents/action";
 import { humanTime } from "@/lib/human-time";
+import { DeleteDocumentButton } from "./delete-document-button";
 
-export default function DocumentCard({ doc }: { doc: dataDocument }) {
+export default function DocumentCard({
+  doc,
+  href = `/chats/${doc.id}`,
+  deletable = false,
+}: {
+  doc: dataDocument;
+  /** Where the title and action link to (e.g. the document detail route). */
+  href?: string;
+  /** Show the delete button (e.g. on the documents page, not the dashboard). */
+  deletable?: boolean;
+}) {
   const isReady = doc.status === "ready";
 
   return (
@@ -32,12 +43,13 @@ export default function DocumentCard({ doc }: { doc: dataDocument }) {
 
       {/* Meta */}
       <div className="flex flex-col gap-0.5">
-        <p
-          className="truncate font-serif text-sm text-foreground"
+        <Link
+          href={href}
+          className="block truncate font-serif text-sm text-foreground hover:text-[#68DBA9]"
           title={doc.title}
         >
           {doc.title}
-        </p>
+        </Link>
         <p className="text-xs text-muted-foreground">
           {isReady
             ? `Updated ${humanTime(doc.updated_at)}`
@@ -46,23 +58,26 @@ export default function DocumentCard({ doc }: { doc: dataDocument }) {
       </div>
 
       {/* Action */}
-      {isReady ? (
-        <Button
-          asChild
-          variant="outline"
-          className="w-full border-[#68DBA9]/40 text-[#68DBA9] hover:bg-[#68DBA9]/10 hover:text-[#68DBA9]"
-        >
-          <Link href={`/chats/${doc.id}`}>
+        {isReady ? (
+          <div className="flex gap-2">
+            <Button
+              asChild
+              variant="outline"
+              className="flex-1 border-[#68DBA9]/40 text-[#68DBA9] hover:bg-[#68DBA9]/10 hover:text-[#68DBA9]"
+            >
+              <Link href={href}>
+                <MessageSquare />
+                Open chat
+              </Link>
+            </Button>
+            {deletable && <DeleteDocumentButton id={doc.id} title={doc.title} />}
+          </div>
+        ) : (
+          <Button disabled variant="secondary" className="w-full">
             <MessageSquare />
             Open chat
-          </Link>
-        </Button>
-      ) : (
-        <Button disabled variant="secondary" className="w-full">
-          <MessageSquare />
-          Open chat
-        </Button>
-      )}
+          </Button>
+        )}
     </Card>
   );
 }
