@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { humanTime } from "@/lib/human-time";
 import { getDocument } from "../action";
 import { DocumentSidebar } from "../_components/document_sidebar";
+import { SetDocumentTitle } from "../_components/set-document-title";
 
 function formatBytes(bytes: number): string {
   if (!bytes) return "0 B";
@@ -30,6 +31,9 @@ export default async function DocumentDetailPage({
 
   return (
     <div className="-m-6 flex h-[calc(100svh-3.5rem)]">
+      {/* Shares the title with the navbar (no refetch). */}
+      <SetDocumentTitle title={doc.title} />
+
       {/* Detail / viewer */}
       <div className="min-w-0 flex-1 overflow-y-auto p-6">
         <div className="flex items-start justify-between gap-4">

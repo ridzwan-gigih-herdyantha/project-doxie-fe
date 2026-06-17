@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -8,10 +10,14 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useState, useEffect} from "react"
+import { useState, useSyncExternalStore } from "react"
 import { ChevronDown, FileText } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import ExportButton from "../export-button";
+import {
+  getDocumentTitle,
+  subscribeDocumentTitle,
+} from "@/lib/document-title-store";
 
 // AI ChatBot Models
 const MODELS = [
@@ -24,34 +30,38 @@ export function ChatNavbar() {
     const [model, setModel] = useState<string>(MODELS[0].id);
     const selectedModel = MODELS.find(m => m.id === model)
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [selectedDocument, setSelectedDocument] = useState<string>("");
+
+    // Title is pushed into the store by the document detail page (no refetch).
+    const documentTitle = useSyncExternalStore(
+      subscribeDocumentTitle,
+      getDocumentTitle,
+      () => null,
+    );
 
     function handleOpenChange(open: boolean) {
       setIsOpen(open);
     }
 
-    // useEffect(() => {
-    //   // Update chosen model
-    //   if (isOpen) {
-        
-    //   }
-    // }, [model, isOpen]);
-
     return (
       <div className="flex w-full justify-between items-center gap-2 p-2">
         <div className="flex w-full justify-start items-center gap-2">
-          {selectedDocument && (
+          {documentTitle && (
             <div className="flex items-center">
-              <div className="flex items-center gap-2">
-                <FileText className="h-6 w-6" />
-                <h1 className="text-sm font-semibold text-foreground">{selectedDocument}</h1>
+              <div className="flex min-w-0 items-center gap-2">
+                <FileText className="h-5 w-5 shrink-0 text-[#68DBA9]" />
+                <h1
+                  className="max-w-[200px] truncate text-sm font-semibold text-foreground"
+                  title={documentTitle}
+                >
+                  {documentTitle}
+                </h1>
               </div>
-              <Separator orientation="vertical" className="my-2 mx-4" />
+              <Separator orientation="vertical" className="mx-4" />
             </div>
           )}
           <div className="flex gap-2 items-center py-1 pl-2 pr-1 rounded-xl border border-border bg-[#141B2B]">
             <h1 className="text-sm font-semibold text-foreground">
-              Model 
+              Model
             </h1>
             <DropdownMenu onOpenChange={handleOpenChange}>
               <DropdownMenuTrigger asChild>

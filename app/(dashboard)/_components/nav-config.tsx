@@ -84,10 +84,17 @@ export const LOGOUT_ITEM = {
 } as const;
 
 export function getActiveSection(pathname: string): NavSection {
+  // A document's detail page (`/documents/{id}`) is a chat view, so it uses the
+  // Chats navbar (model picker, …) instead of the Documents one. The list page
+  // `/documents` (no trailing segment) is unaffected.
+  if (pathname.startsWith("/documents/")) {
+    return NAV_SECTIONS.find((s) => s.key === "chats") ?? NAV_SECTIONS[0];
+  }
+
   return (
     [...NAV_SECTIONS, ...NAV_FOOTER]
       .sort((a, b) => b.href.length - a.href.length)
       .find((s) => pathname === s.href || pathname.startsWith(`${s.href}/`)) ??
-    NAV_SECTIONS[0] 
+    NAV_SECTIONS[0]
   );
 }
