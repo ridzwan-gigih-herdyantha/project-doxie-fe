@@ -3,11 +3,14 @@
 import { api } from "@/lib/api/client";
 import { ApiError } from "@/lib/api/errors";
 
-// TODO: Chat session get API
-export interface Chat {
-    id: string;
-    name: string;
-    messages: string[];
+export interface Message {
+    id: number;
+    chat_session_id: number;
+    role: "user" | "assistant";
+    content: string;
+    model_used: string | null;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface Session {
@@ -22,7 +25,7 @@ export interface Session {
 export interface successListChatsResponse {
     success: true;
     message: string;
-    data: Chat[];
+    data: Message[];
 }
 
 export interface successListSessionsResponse {
@@ -103,16 +106,17 @@ export async function listSessions(
     }
 }
 
-export async function listChats(chatSessionId: number) {
+export async function listChats(
+    chatSessionId: number,
+): Promise<successListChatsResponse | errorResponse> {
     try {
-        // TODO: Chat list get API
         return await api.get<successListChatsResponse>(`/session/${chatSessionId}/messages`);
     } catch (error) {
         if (error instanceof ApiError) {
             return {
                 success: false,
                 message: error.message,
-                errors: error.isUnauthorized ?? undefined,
+                errors: error.validationErrors ?? undefined,
             };
         }
 

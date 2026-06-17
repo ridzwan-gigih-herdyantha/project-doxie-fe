@@ -27,7 +27,9 @@ async function handler(request: NextRequest, ctx: RouteContext<"/api/backend/[..
   request.headers.forEach((value, key) => {
     if (!HOP_BY_HOP.has(key)) headers.set(key, value);
   });
-  headers.set("Accept", "application/json");
+  // Default to JSON, but keep the client's Accept when set (e.g.
+  // `text/event-stream` for SSE) so streaming responses aren't forced to JSON.
+  if (!headers.has("Accept")) headers.set("Accept", "application/json");
 
   const token = await getToken();
   if (token) headers.set("Authorization", `Bearer ${token}`);

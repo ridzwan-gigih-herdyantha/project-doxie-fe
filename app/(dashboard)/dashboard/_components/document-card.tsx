@@ -16,7 +16,7 @@ import { DeleteDocumentButton } from "./delete-document-button";
 
 export default function DocumentCard({
   doc,
-  href = `/chats/${doc.id}`,
+  href = `/documents/${doc.id}`,
   deletable = false,
 }: {
   doc: dataDocument;
@@ -51,7 +51,7 @@ export default function DocumentCard({
       }
 
       toast.success("Chat ready. Redirecting...", { id: toastId });
-      router.push(`/chats/${sessionId}?documentId=${doc.id}`);
+      router.push(`/documents/${doc.id}?session=${sessionId}`);
     } catch (error) {
       console.error(error);
       toast.error("Couldn't open the chat. Please try again.", { id: toastId });

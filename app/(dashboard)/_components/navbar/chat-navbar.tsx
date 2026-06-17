@@ -18,17 +18,17 @@ import {
   getDocumentTitle,
   subscribeDocumentTitle,
 } from "@/lib/document-title-store";
-
-// AI ChatBot Models
-const MODELS = [
-  { id: "gpt-4o", label: "ChatGPT 4.0" },
-  { id: "claude-3-5-sonnet-20241022", label: "Claude 3.5 Sonnet" },
-  { id: "gemini-2.5-flash", label: "Gemini 2.5 Flash" },
-]
+import {
+  CHAT_MODELS,
+  getChatModel,
+  setChatModel,
+  subscribeChatModel,
+} from "@/lib/chat-model-store";
 
 export function ChatNavbar() {
-    const [model, setModel] = useState<string>(MODELS[0].id);
-    const selectedModel = MODELS.find(m => m.id === model)
+    // Shared so the chat panel knows which model to send with.
+    const model = useSyncExternalStore(subscribeChatModel, getChatModel, getChatModel);
+    const selectedModel = CHAT_MODELS.find(m => m.id === model)
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     // Title is pushed into the store by the document detail page (no refetch).
@@ -79,15 +79,15 @@ export function ChatNavbar() {
                   <DropdownMenuLabel>Select Model</DropdownMenuLabel>
                   <DropdownMenuRadioGroup
                     value={model}
-                    onValueChange={setModel}
+                    onValueChange={setChatModel}
                   >
-                  {MODELS.map((model) => (
+                  {CHAT_MODELS.map((m) => (
                       <DropdownMenuRadioItem
-                        key={model.id}
-                        value={model.id}
+                        key={m.id}
+                        value={m.id}
                         className="capitalize"
                       >
-                        {model.label}
+                        {m.label}
                       </DropdownMenuRadioItem>
                     ))}
                   </DropdownMenuRadioGroup>

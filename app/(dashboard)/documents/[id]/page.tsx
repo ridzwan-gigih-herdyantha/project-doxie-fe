@@ -7,6 +7,7 @@ import { getDocument } from "../action";
 import { DocumentSidebar } from "../_components/document_sidebar";
 import { SetDocumentTitle } from "../_components/set-document-title";
 import { PdfViewerClient } from "../_components/pdf-viewer-client";
+import { listChats, listSessions } from "../../chats/action";
 
 function formatBytes(bytes: number): string {
   if (!bytes) return "0 B";
@@ -15,19 +16,43 @@ function formatBytes(bytes: number): string {
   return `${(bytes / 1024 ** i).toFixed(i ? 1 : 0)} ${units[i]}`;
 }
 
+async function loadChat(documentId: number, session?: string) {
+  let sessionId = session ? Number(session) : undefined;
+
+  if (!sessionId) {
+    const sessions = await listSessions(documentId);
+    if (sessions.success) sessionId = sessions.data[0]?.id;
+  }
+  if (!sessionId) return { sessionId: undefined, messages: [] };
+
+  const chats = await listChats(sessionId);
+  const messages = chats.success
+    ? chats.data.map((m) => ({ id: m.id, role: m.role, content: m.content }))
+    : [];
+
+  return { sessionId, messages };
+}
+
 export default async function DocumentDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ session?: string }>;
 }) {
   const { id } = await params;
-  const result = await getDocument(id);
+  const { session } = await searchParams;
 
-  if (!result.success) {
+  const [documentResult, chat] = await Promise.all([
+    getDocument(id),
+    loadChat(Number(id), session),
+  ]);
+
+  if (!documentResult.success) {
     notFound();
   }
 
-  const doc = result.data;
+  const doc = documentResult.data;
   const isReady = doc.status === "ready";
 
   return (
@@ -62,16 +87,19 @@ export default async function DocumentDetailPage({
           </span>
         </div>
 
-        {/* TODO: point this at your real PDF endpoint. It goes through the
-            proxy so the auth cookie is attached. Adjust the path to match the
-            Laravel route that streams the file. */}
+        {/* TODO: point this at your real PDF endpoint. */}
         <PdfViewerClient
-          url={`/api/backend/documents/${doc.id}/download`}
+          url={`${doc.file_url}`}
           className="mt-4 h-[75vh]"
         />
       </div>
 
-      <DocumentSidebar documentTitle={doc.title} />
+      <DocumentSidebar
+        key={chat.sessionId ?? doc.id}
+        documentTitle={doc.title}
+        sessionId={chat.sessionId}
+        messages={chat.messages}
+      />
     </div>
   );
 }

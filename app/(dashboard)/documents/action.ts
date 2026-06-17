@@ -12,6 +12,7 @@ export interface dataDocument {
     file_name: string;
     file_path: string;
     file_size: number;
+    file_url: string;
     page_count: number;
     status: string;
     created_at: string;
