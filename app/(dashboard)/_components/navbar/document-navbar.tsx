@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
-import NotificationBell from "./notif-button";
 
 export function DocumentNavbar() {
   const [query, setQuery] = useState("");
@@ -20,8 +19,6 @@ export function DocumentNavbar() {
         className="w-64"
         aria-label="Search documents"
       />
-
-      <NotificationBell />
     </div>
   );
 }

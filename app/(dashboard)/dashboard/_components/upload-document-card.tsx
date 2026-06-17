@@ -6,7 +6,8 @@ import { FileUp } from "lucide-react";
 import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
-import { uploadDocument } from "../../actions";
+import { uploadDocumentFile } from "@/lib/api/upload";
+import { revalidateDocuments } from "../../actions";
 
 export default function UploadDocumentCard() {
   const router = useRouter();
@@ -23,9 +24,10 @@ export default function UploadDocumentCard() {
     setIsLoading(true);
     const toastId = toast.loading("Uploading document...");
     try {
-      const result = await uploadDocument(file);
+      const result = await uploadDocumentFile(file);
       if (result.success) {
         toast.success(result.message, { id: toastId });
+        await revalidateDocuments();
         router.refresh();
       } else {
         const detail = result.errors

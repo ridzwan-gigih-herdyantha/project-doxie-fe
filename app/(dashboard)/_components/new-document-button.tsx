@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react"
+import { useRouter } from "next/navigation";
 import { PlusIcon } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
@@ -13,9 +14,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { uploadDocument } from "../actions";
+import { uploadDocumentFile } from "@/lib/api/upload";
+import { revalidateDocuments } from "../actions";
 
 export default function NewDocumentButton() {
+    const router = useRouter();
     const { state, isMobile } = useSidebar();
     const collapsed = state === "collapsed" && !isMobile;
 
@@ -44,12 +47,13 @@ export default function NewDocumentButton() {
         const toastId = toast.loading("Uploading document...");
 
         try {
-            const result = await uploadDocument(selectedFile);
+            const result = await uploadDocumentFile(selectedFile);
 
             if (result.success) {
-                console.log("Uploaded document:", result.data);
                 toast.success(result.message, { id: toastId });
                 setFile(selectedFile);
+                await revalidateDocuments();
+                router.refresh();
             } else {
                 const detail = result.errors
                     ? Object.values(result.errors).flat().join("\n")
