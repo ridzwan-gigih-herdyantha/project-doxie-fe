@@ -16,7 +16,7 @@ export function DashboardNavbar() {
   const Actions = section.Actions;
 
   return (
-    <header className="flex h-14 sticky top-0 shrink-0 items-center gap-3 border-b border-border bg-sidebar px-4">
+    <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center gap-3 border-b border-border bg-sidebar px-4">
       <SidebarTrigger className="-ml-1"/>
       <Separator orientation="vertical" className="mr-1 data-[orientation=vertical]:h-full" />
       {/* <h1 className="text-sm font-semibold text-foreground">{section.title}</h1> */}
