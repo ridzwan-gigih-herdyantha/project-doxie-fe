@@ -21,18 +21,41 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { MessageSquare } from "lucide-react";
 import NewDocumentButton from "./new-document-button";
-import { listRecentChats, type Session } from "../chats/action";
+import { listRecentChats } from "../chats/action";
+import {
+  getLoadingTitleIds,
+  getRecentChats,
+  isRecentChatsLoaded,
+  markRecentChatsLoaded,
+  setRecentChats,
+  subscribeRecentChats,
+} from "@/lib/recent-chats-store";
 
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const [recentChats, setRecentChats] = useState<Session[]>([]);
-  const [isLoadRecentChats, setIsLoadRecentChats] = useState(true);
+  const recentChats = useSyncExternalStore(
+    subscribeRecentChats,
+    getRecentChats,
+    getRecentChats,
+  );
+  const loaded = useSyncExternalStore(
+    subscribeRecentChats,
+    isRecentChatsLoaded,
+    () => false,
+  );
+  const loadingTitleIds = useSyncExternalStore(
+    subscribeRecentChats,
+    getLoadingTitleIds,
+    getLoadingTitleIds,
+  );
 
+  // Seed the store once from the server.
   useEffect(() => {
+    if (isRecentChatsLoaded()) return;
     let active = true;
     (async () => {
       try {
@@ -41,7 +64,7 @@ export function AppSidebar() {
       } catch (error) {
         console.error(error);
       } finally {
-        if (active) setIsLoadRecentChats(false);
+        if (active) markRecentChatsLoaded();
       }
     })();
     return () => {
@@ -122,7 +145,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel className="text-sm">Recent Chats</SidebarGroupLabel>
           <SidebarMenu className="gap-1">
-            {isLoadRecentChats ? (
+            {!loaded ? (
               ["w-3/4", "w-1/2", "w-2/3", "w-4/5"].map((w, i) => (
                 <SidebarMenuItem key={i}>
                   <div className="flex h-8 items-center gap-2 px-2">
@@ -147,7 +170,11 @@ export function AppSidebar() {
                   <SidebarMenuButton asChild tooltip={chat.title ?? "Untitled"}>
                     <Link href={`/documents/${chat.document_id}?session=${chat.id}`}>
                       <MessageSquare />
-                      <span className="truncate">{chat.title ?? "Untitled"}</span>
+                      {loadingTitleIds.has(chat.id) ? (
+                        <Skeleton className="h-4 w-full rounded-sm group-data-[collapsible=icon]:hidden" />
+                      ) : (
+                        <span className="truncate">{chat.title ?? "Untitled"}</span>
+                      )}
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

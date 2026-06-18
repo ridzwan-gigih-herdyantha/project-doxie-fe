@@ -38,10 +38,10 @@ export default async function DocumentDetailPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ session?: string }>;
+  searchParams: Promise<{ session?: string; q?: string }>;
 }) {
   const { id } = await params;
-  const { session } = await searchParams;
+  const { session, q } = await searchParams;
 
   const [documentResult, chat] = await Promise.all([
     getDocument(id),
@@ -99,6 +99,7 @@ export default async function DocumentDetailPage({
         documentTitle={doc.title}
         sessionId={chat.sessionId}
         messages={chat.messages}
+        initialQuestion={q}
       />
     </div>
   );

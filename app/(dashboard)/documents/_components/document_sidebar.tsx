@@ -14,28 +14,68 @@ import {
 import { useChat, type ChatMessage } from "@/hooks/use-chat";
 import { getChatModel } from "@/lib/chat-model-store";
 import { Spinner } from "@/components/ui/spinner";
+import { listRecentChats } from "../../chats/action";
+import {
+  clearRecentChatTitleLoading,
+  setRecentChats,
+} from "@/lib/recent-chats-store";
 
 export function DocumentSidebar({
   documentTitle = "Document",
   sessionId,
   messages: initialMessages = [],
+  initialQuestion,
   defaultOpen = true,
 }: {
   documentTitle?: string;
   sessionId?: number;
   messages?: ChatMessage[];
+  /** First message to auto-send on mount (e.g. from the /chats composer). */
+  initialQuestion?: string;
   defaultOpen?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen);
   const [input, setInput] = useState("");
   const { messages, isStreaming, sendMessage } = useChat(initialMessages);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const autoSentRef = useRef(false);
+  const wasStreamingRef = useRef(false);
 
   // Keep the conversation pinned to the bottom as messages arrive / stream in.
   useEffect(() => {
     const el = scrollRef.current;
     if (el) el.scrollTop = el.scrollHeight;
   }, [messages]);
+
+  // Auto-send the first question once (new chat started from the composer).
+  useEffect(() => {
+    if (autoSentRef.current) return;
+    const question = initialQuestion?.trim();
+    if (question && sessionId !== undefined && messages.length === 0) {
+      autoSentRef.current = true;
+      sendMessage(sessionId, question, getChatModel());
+    }
+  }, [initialQuestion, sessionId, messages.length, sendMessage]);
+
+  // When a reply finishes streaming, the backend may have generated a session
+  // title — refetch and sync the store so the sidebar's Recent Chats updates.
+  useEffect(() => {
+    const finished = wasStreamingRef.current && !isStreaming;
+    wasStreamingRef.current = isStreaming;
+    if (!finished) return;
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await listRecentChats();
+        if (res.success) setRecentChats(res.data);
+        else clearRecentChatTitleLoading();
+      } catch (error) {
+        console.error(error);
+        clearRecentChatTitleLoading();
+      }
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [isStreaming]);
 
   const canSend = input.trim() !== "" && sessionId !== undefined && !isStreaming;
 
