@@ -56,7 +56,7 @@ export default async function DocumentDetailPage({
   const isReady = doc.status === "ready";
 
   return (
-    <div className="-m-6 flex h-[calc(100svh-3.5rem)]">
+    <div className="-m-6 flex h-[calc(100svh-3.5rem)] overflow-hidden">
       {/* Shares the title with the navbar (no refetch). */}
       <SetDocumentTitle title={doc.title} />
 
