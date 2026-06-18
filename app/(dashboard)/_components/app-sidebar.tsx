@@ -44,12 +44,15 @@ export function AppSidebar() {
                   unoptimized
                   className="size-7 shrink-0"
                 />
-                <span className="font-serif text-lg font-bold tracking-tight text-[#68DBA9]">
+                <span className="font-serif text-xl font-bold tracking-tight text-[#68DBA9]">
                   Doxie
                 </span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
+          {/* <SidebarMenuItem>
+            <span className="text-sm text-left ml-4 font-light font-sans text-gray-400">Main Workspace</span>
+          </SidebarMenuItem> */}
         </SidebarMenu>
       </SidebarHeader>
 
