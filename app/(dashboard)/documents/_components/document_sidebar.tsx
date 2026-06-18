@@ -14,6 +14,7 @@ import {
 import { useChat, type ChatMessage } from "@/hooks/use-chat";
 import { getChatModel } from "@/lib/chat-model-store";
 import { Spinner } from "@/components/ui/spinner";
+import { Markdown } from "./markdown";
 import { listRecentChats } from "../../chats/action";
 import {
   clearRecentChatTitleLoading,
@@ -146,13 +147,19 @@ export function DocumentSidebar({
           >
             <div
               className={cn(
-                "max-w-[85%] whitespace-pre-wrap rounded-lg px-3 py-2 text-sm",
+                "max-w-[85%] rounded-lg px-3 py-2 text-sm",
                 m.role === "user"
                   ? "bg-[#68DBA9] text-[#141B2B]"
                   : "bg-muted text-foreground",
               )}
             >
-              {m.content || (isStreaming ? <Spinner className="size-4" /> : "")}
+              {m.role === "user" ? (
+                <span className="whitespace-pre-wrap">{m.content}</span>
+              ) : m.content ? (
+                <Markdown>{m.content}</Markdown>
+              ) : isStreaming ? (
+                <Spinner className="size-4" />
+              ) : null}
             </div>
           </div>
         ))}
