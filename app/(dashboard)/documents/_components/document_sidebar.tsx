@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MessageSquare, PanelRightClose, Send } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,13 @@ export function DocumentSidebar({
   const [open, setOpen] = useState(defaultOpen);
   const [input, setInput] = useState("");
   const { messages, isStreaming, sendMessage } = useChat(initialMessages);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Keep the conversation pinned to the bottom as messages arrive / stream in.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [messages]);
 
   const canSend = input.trim() !== "" && sessionId !== undefined && !isStreaming;
 
@@ -80,7 +87,10 @@ export function DocumentSidebar({
         </Button>
       </header>
 
-      <div className="flex flex-1 flex-col gap-3 overflow-y-auto p-4">
+      <div
+        ref={scrollRef}
+        className="flex flex-1 flex-col gap-3 overflow-y-auto p-4"
+      >
         {messages.length === 0 && (
           <div className="flex flex-1 items-center justify-center px-4 text-center text-sm text-muted-foreground">
             No messages yet. Ask something about this document to get started.
