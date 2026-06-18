@@ -20,13 +20,34 @@ import {
   SidebarRail,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
-import { useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useEffect, useState } from "react";
+import { MessageSquare } from "lucide-react";
 import NewDocumentButton from "./new-document-button";
+import { listRecentChats, type Session } from "../chats/action";
 
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const [recentChats, setRecentChats] = useState<string[]>([]);
+  const [recentChats, setRecentChats] = useState<Session[]>([]);
+  const [isLoadRecentChats, setIsLoadRecentChats] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const response = await listRecentChats();
+        if (active && response.success) setRecentChats(response.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        if (active) setIsLoadRecentChats(false);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     <Sidebar collapsible="icon">
@@ -101,13 +122,37 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel className="text-sm">Recent Chats</SidebarGroupLabel>
           <SidebarMenu className="gap-1">
-            {recentChats.map((chat) => (
-              <SidebarMenuItem key={chat}>
-                <SidebarMenuButton asChild>
-                  <Link href={`/chat/${chat}`}>{chat}</Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
+            {isLoadRecentChats ? (
+              ["w-3/4", "w-1/2", "w-2/3", "w-4/5"].map((w, i) => (
+                <SidebarMenuItem key={i}>
+                  <div className="flex h-8 items-center gap-2 px-2">
+                    <Skeleton className="size-4 shrink-0 rounded-sm" />
+                    <Skeleton
+                      className={cn(
+                        "h-3 rounded-sm",
+                        w,
+                        "group-data-[collapsible=icon]:hidden",
+                      )}
+                    />
+                  </div>
+                </SidebarMenuItem>
+              ))
+            ) : recentChats.length === 0 ? (
+              <p className="px-2 py-1 text-xs text-muted-foreground group-data-[collapsible=icon]:hidden">
+                No recent chats yet.
+              </p>
+            ) : (
+              recentChats.map((chat) => (
+                <SidebarMenuItem key={chat.id}>
+                  <SidebarMenuButton asChild tooltip={chat.title ?? "Untitled"}>
+                    <Link href={`/documents/${chat.document_id}?session=${chat.id}`}>
+                      <MessageSquare />
+                      <span className="truncate">{chat.title ?? "Untitled"}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))
+            )}
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>

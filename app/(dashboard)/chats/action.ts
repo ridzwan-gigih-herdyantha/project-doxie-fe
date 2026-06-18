@@ -85,6 +85,25 @@ export async function createSession(
     }
 }
 
+export async function listRecentChats(): Promise<successListSessionsResponse | errorResponse> {
+    try {
+        return await api.get<successListSessionsResponse>(`/sessions`);
+    } catch (error) {
+        if (error instanceof ApiError) {
+            return {
+                success: false,
+                message: error.message,
+                errors: error.validationErrors ?? undefined,
+            };
+        }
+
+        return {
+            success: false,
+            message: "Couldn't reach the server. Please try again.",
+        }
+    }
+}
+
 export async function listSessions(
     documentId: number,
 ): Promise<successListSessionsResponse | errorResponse> {
