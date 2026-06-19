@@ -2,17 +2,19 @@
 
 import { api } from "@/lib/api/client";
 import { ApiError } from "@/lib/api/errors";
-import { setToken } from "@/lib/auth/session";
+import { setToken, setUser } from "@/lib/auth/session";
 
 interface AuthResponse {
   success: boolean;
   message: string;
-  data: { 
-    user: 
-    { 
-      id: number; name: string; email: string
-    },
-    token: string 
+  data: {
+    user: {
+      id: number;
+      name: string;
+      email: string;
+      avatar_url?: string | null;
+    };
+    token: string;
   };
 }
 
@@ -46,6 +48,12 @@ export async function login(
       { skipAuth: true },
     );
     await setToken(res.data?.token);
+    if (res.data?.user) {
+      await setUser({
+        ...res.data.user,
+        avatar_url: res.data.user.avatar_url ?? null,
+      });
+    }
   } catch (error) {
     return { ...toAuthError(error), values };
   }
@@ -80,6 +88,12 @@ export async function register(
       { skipAuth: true },
     );
     await setToken(res.data?.token);
+    if (res.data?.user) {
+      await setUser({
+        ...res.data.user,
+        avatar_url: res.data.user.avatar_url ?? null,
+      });
+    }
   } catch (error) {
     return { ...toAuthError(error), values };
   }

@@ -165,7 +165,7 @@ export function AppSidebar() {
                 No recent chats yet.
               </p>
             ) : (
-              recentChats.map((chat) => (
+              recentChats.slice(0, 5).map((chat) => (
                 <SidebarMenuItem key={chat.id}>
                   <SidebarMenuButton asChild tooltip={chat.title ?? "Untitled"}>
                     <Link href={`/documents/${chat.document_id}?session=${chat.id}`}>

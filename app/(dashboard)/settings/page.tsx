@@ -1,8 +1,10 @@
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { getUser } from "@/lib/auth/session";
 import { listDocuments } from "../documents/action";
 import { BillingTab } from "./_components/billing-tab";
+import { EditProfile } from "./_components/edit-profile";
 
 const TABS = [
   { value: "profile", label: "Profile" },
@@ -19,15 +21,24 @@ function PlaceholderTab({ title }: { title: string }) {
   );
 }
 
-export default async function SettingsPage() {
-  const result = await listDocuments();
+export default async function SettingsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>;
+}) {
+  const [result, user, { tab }] = await Promise.all([
+    listDocuments(),
+    getUser(),
+    searchParams,
+  ]);
   const documentCount = result.success ? result.data.length : 0;
+  const activeTab = TABS.some((t) => t.value === tab) ? tab : "billing";
 
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
 
-      <Tabs defaultValue="billing" className="gap-6">
+      <Tabs defaultValue={activeTab} className="gap-6">
         <TabsList variant="line" className="h-auto justify-start gap-6 rounded-none border-b border-border bg-transparent p-0">
           {TABS.map((t) => (
             <TabsTrigger
@@ -44,7 +55,11 @@ export default async function SettingsPage() {
         </TabsList>
 
         <TabsContent value="profile">
-          <PlaceholderTab title="Profile" />
+          <EditProfile
+            defaultName={user?.name ?? ""}
+            defaultEmail={user?.email ?? ""}
+            defaultAvatarUrl={user?.avatar_url ?? undefined}
+          />
         </TabsContent>
         <TabsContent value="workspace">
           <PlaceholderTab title="Workspace" />

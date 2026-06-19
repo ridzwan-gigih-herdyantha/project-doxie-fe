@@ -1,16 +1,15 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Bell } from "lucide-react";
 
 import { getActiveSection } from "@/app/(dashboard)/_components/nav-config";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { AvatarUser } from "./avatar-user";
 import NotificationBell from "./navbar/notif-button";
+import type { SessionUser } from "@/lib/auth/session";
 
-export function DashboardNavbar() {
+export function DashboardNavbar({ user }: { user: SessionUser | null }) {
   const pathname = usePathname();
   const section = getActiveSection(pathname);
   const Actions = section.Actions;
@@ -25,7 +24,7 @@ export function DashboardNavbar() {
         {Actions ? <Actions /> : null}
         <div className="ml-auto flex items-center">
           <NotificationBell className="mx-2"/>
-          <AvatarUser />
+          <AvatarUser user={user} />
         </div>
       </div>
     </header>

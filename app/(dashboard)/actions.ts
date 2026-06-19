@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 import { api } from "@/lib/api/client";
-import { clearToken } from "@/lib/auth/session";
+import { clearToken, clearUser } from "@/lib/auth/session";
 
 export async function logout() {
   try {
@@ -14,6 +14,7 @@ export async function logout() {
   }
 
   await clearToken();
+  await clearUser();
   redirect("/login");
 }
 
