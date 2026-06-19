@@ -1,13 +1,17 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import { FileText } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { humanTime } from "@/lib/human-time";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getDocument } from "../action";
 import { DocumentSidebar } from "../_components/document_sidebar";
 import { SetDocumentTitle } from "../_components/set-document-title";
 import { PdfViewerClient } from "../_components/pdf-viewer-client";
 import { listChats, listSessions } from "../../chats/action";
+
+type DocumentPromise = ReturnType<typeof getDocument>;
+type ChatPromise = ReturnType<typeof loadChat>;
 
 function formatBytes(bytes: number): string {
   if (!bytes) return "0 B";
@@ -43,24 +47,45 @@ export default async function DocumentDetailPage({
   const { id } = await params;
   const { session, q } = await searchParams;
 
-  const [documentResult, chat] = await Promise.all([
-    getDocument(id),
-    loadChat(Number(id), session),
-  ]);
-
-  if (!documentResult.success) {
-    notFound();
-  }
-
-  const doc = documentResult.data;
-  const isReady = doc.status === "ready";
+  // Kick both fetches off in parallel and stream them in — the shell + skeletons
+  // paint immediately instead of blocking on the slowest request.
+  const documentPromise = getDocument(id);
+  const chatPromise = loadChat(Number(id), session);
 
   return (
     <div className="-m-6 flex h-[calc(100svh-3.5rem)] overflow-hidden">
+      <Suspense fallback={<DetailSkeleton />}>
+        <DocumentDetail documentPromise={documentPromise} />
+      </Suspense>
+
+      <Suspense fallback={<ChatSkeleton />}>
+        <ChatPanel
+          documentId={Number(id)}
+          documentPromise={documentPromise}
+          chatPromise={chatPromise}
+          initialQuestion={q}
+        />
+      </Suspense>
+    </div>
+  );
+}
+
+async function DocumentDetail({
+  documentPromise,
+}: {
+  documentPromise: DocumentPromise;
+}) {
+  const result = await documentPromise;
+  if (!result.success) notFound();
+
+  const doc = result.data;
+  const isReady = doc.status === "ready";
+
+  return (
+    <>
       {/* Shares the title with the navbar (no refetch). */}
       <SetDocumentTitle title={doc.title} />
 
-      {/* Detail / viewer */}
       <div className="min-w-0 flex-1 overflow-y-auto px-6 pt-4 pb-2">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
@@ -87,20 +112,71 @@ export default async function DocumentDetailPage({
           </span>
         </div>
 
-        {/* TODO: point this at your real PDF endpoint. */}
-        <PdfViewerClient
-          url={`${doc.file_url}`}
-          className="mt-4 h-[75vh]"
-        />
+        <PdfViewerClient url={`${doc.file_url}`} className="mt-4 h-[75vh]" />
       </div>
+    </>
+  );
+}
 
-      <DocumentSidebar
-        key={chat.sessionId ?? doc.id}
-        documentTitle={doc.title}
-        sessionId={chat.sessionId}
-        messages={chat.messages}
-        initialQuestion={q}
-      />
+async function ChatPanel({
+  documentId,
+  documentPromise,
+  chatPromise,
+  initialQuestion,
+}: {
+  documentId: number;
+  documentPromise: DocumentPromise;
+  chatPromise: ChatPromise;
+  initialQuestion?: string;
+}) {
+  const [docResult, chat] = await Promise.all([documentPromise, chatPromise]);
+  const documentTitle = docResult.success ? docResult.data.title : "Document";
+
+  return (
+    <DocumentSidebar
+      key={chat.sessionId ?? documentId}
+      documentTitle={documentTitle}
+      sessionId={chat.sessionId}
+      messages={chat.messages}
+      initialQuestion={initialQuestion}
+    />
+  );
+}
+
+function DetailSkeleton() {
+  return (
+    <div className="min-w-0 flex-1 overflow-y-auto px-6 pt-4 pb-2">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-2">
+          <Skeleton className="h-6 w-64 max-w-full" />
+          <Skeleton className="h-4 w-52 max-w-full" />
+        </div>
+        <Skeleton className="h-5 w-16 rounded-md" />
+      </div>
+      <Skeleton className="mt-4 h-[75vh] w-full rounded-xl" />
     </div>
+  );
+}
+
+function ChatSkeleton() {
+  return (
+    <aside className="flex h-full w-7/12 shrink-0 flex-col border-l border-border bg-sidebar">
+      <div className="flex items-center gap-2 border-b border-border px-4 py-3">
+        <Skeleton className="size-4 rounded" />
+        <div className="flex flex-col gap-1.5">
+          <Skeleton className="h-3 w-10" />
+          <Skeleton className="h-3 w-28" />
+        </div>
+      </div>
+      <div className="flex flex-1 flex-col gap-3 p-4">
+        <Skeleton className="h-10 w-3/4 rounded-lg" />
+        <Skeleton className="h-10 w-1/2 self-end rounded-lg" />
+        <Skeleton className="h-16 w-4/5 rounded-lg" />
+      </div>
+      <div className="flex items-center gap-2 border-t border-border p-3">
+        <Skeleton className="h-8 flex-1 rounded-sm" />
+        <Skeleton className="size-8 rounded-lg" />
+      </div>
+    </aside>
   );
 }
