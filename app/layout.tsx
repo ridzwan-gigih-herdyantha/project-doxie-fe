@@ -4,6 +4,8 @@ import { Hanken_Grotesk, JetBrains_Mono, Inter } from "next/font/google";
 
 import "@/app/globals.css";
 
+import NextTopLoader from "nextjs-toploader";
+
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CheckCircle2Icon } from "lucide-react";
@@ -69,6 +71,14 @@ export default function RootLayout({
       className={`dark ${hankenGrotesk.variable} ${liberationSerif.variable} ${jetBrainsMono.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <NextTopLoader
+          color="#68DBA9"
+          height={3}
+          shadow="0 0 10px #68DBA9, 0 0 5px #68DBA9"
+          showSpinner={false}
+          crawlSpeed={200}
+          speed={300}
+        />
         <TooltipProvider>{children}</TooltipProvider>
         <Toaster
           position="top-right"
