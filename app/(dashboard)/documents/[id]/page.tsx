@@ -47,8 +47,6 @@ export default async function DocumentDetailPage({
   const { id } = await params;
   const { session, q } = await searchParams;
 
-  // Kick both fetches off in parallel and stream them in — the shell + skeletons
-  // paint immediately instead of blocking on the slowest request.
   const documentPromise = getDocument(id);
   const chatPromise = loadChat(Number(id), session);
 

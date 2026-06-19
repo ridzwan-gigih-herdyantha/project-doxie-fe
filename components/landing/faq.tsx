@@ -3,11 +3,11 @@ import { ChevronDown } from "lucide-react";
 const FAQS = [
   {
     q: "What file types are supported?",
-    a: "Doxie supports PDF, Word (.docx), and spreadsheet files today, with more formats on the way.",
+    a: "For now, Doxie only support PDF files. We're working with more formats on the way.",
   },
   {
     q: "Can I switch AI models mid-chat?",
-    a: "Yes — switch between GPT-4o, Claude 3.5, and Gemini at any point in a conversation.",
+    a: "Yes. Switch between GPT-4o, Claude 3.5, and Gemini at any point in a conversation.",
   },
   {
     q: "Is my data private?",
@@ -19,7 +19,7 @@ const FAQS = [
   },
   {
     q: "Can I cancel anytime?",
-    a: "Yes, you can cancel your subscription at any time — no questions asked.",
+    a: "Yes, you can cancel your subscription at any time, no questions asked.",
   },
 ];
 

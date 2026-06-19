@@ -50,7 +50,7 @@ export function LandingFooter() {
 
       <div className="border-t border-border/60 mx-auto max-w-6xl px-6 py-6">
           <p className="text-xs text-muted-foreground">
-            © 2024 Doxie AI Inc. All rights reserved.
+            &copy; {new Date().getFullYear()} Doxie AI Inc. All rights reserved.
           </p>
       </div>
     </footer>
