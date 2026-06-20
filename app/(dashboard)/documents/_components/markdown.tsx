@@ -56,7 +56,9 @@ function CodeBlock({ children }: { children?: React.ReactNode }) {
       </pre>
       <CopyButton
         value={() => ref.current?.innerText ?? ""}
-        label="Copy code"
+        label="Copy to clipboard"
+        copiedLabel="Copied!"
+        tooltip
         className="absolute right-1.5 top-1.5 bg-black/40 opacity-0 group-hover:opacity-100"
       />
     </div>

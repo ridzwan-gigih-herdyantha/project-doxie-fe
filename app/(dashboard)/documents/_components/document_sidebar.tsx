@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { MessageSquare, PanelRightClose, Send } from "lucide-react";
+import { ChevronDown, MessageSquare, PanelRightClose, Send } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,11 +42,24 @@ export function DocumentSidebar({
   const scrollRef = useRef<HTMLDivElement>(null);
   const autoSentRef = useRef(false);
   const wasStreamingRef = useRef(false);
+  const atBottomRef = useRef(true);
+  const [showScrollDown, setShowScrollDown] = useState(false);
 
-  // Keep the conversation pinned to the bottom as messages arrive / stream in.
-  useEffect(() => {
+  const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior });
+  };
+
+  // Track whether the user is near the bottom; reveal the jump button otherwise.
+  const handleScroll = () => {
     const el = scrollRef.current;
-    if (el) el.scrollTop = el.scrollHeight;
+    if (!el) return;
+    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+    atBottomRef.current = atBottom;
+    setShowScrollDown(!atBottom);
+  };
+
+  useEffect(() => {
+    if (atBottomRef.current) scrollToBottom("auto");
   }, [messages]);
 
   // Auto-send the first question once (new chat started from the composer).
@@ -129,9 +142,11 @@ export function DocumentSidebar({
         </Button>
       </header>
 
+      <div className="relative min-w-0 flex-1 overflow-hidden">
       <div
         ref={scrollRef}
-        className="flex min-w-0 flex-1 flex-col gap-3 overflow-x-hidden overflow-y-auto p-4"
+        onScroll={handleScroll}
+        className="flex h-full min-w-0 flex-col gap-3 overflow-x-hidden overflow-y-auto p-4"
       >
         {messages.length === 0 && (
           <div className="flex flex-1 items-center justify-center px-4 text-center text-sm text-muted-foreground">
@@ -160,7 +175,12 @@ export function DocumentSidebar({
                 <>
                   <Markdown>{m.content}</Markdown>
                   <div className="mt-1 flex justify-end">
-                    <CopyButton value={m.content} label="Copy message" className="-mr-1" />
+                    <CopyButton
+                      value={m.content}
+                      label="Copy to clipboard"
+                      tooltip
+                      className="-mr-1"
+                    />
                   </div>
                 </>
               ) : isStreaming ? (
@@ -169,6 +189,22 @@ export function DocumentSidebar({
             </div>
           </div>
         ))}
+      </div>
+
+        <Button
+          type="button"
+          size="icon"
+          onClick={() => scrollToBottom()}
+          aria-label="Scroll to latest"
+          className={cn(
+            "absolute bottom-3 left-1/2 size-8 -translate-x-1/2 rounded-full bg-brand text-brand-foreground shadow-md transition-all duration-300 hover:bg-brand/90",
+            showScrollDown
+              ? "translate-y-0 opacity-100"
+              : "pointer-events-none translate-y-2 opacity-0",
+          )}
+        >
+          <ChevronDown className="size-4" />
+        </Button>
       </div>
 
       <form

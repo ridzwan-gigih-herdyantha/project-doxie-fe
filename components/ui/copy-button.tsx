@@ -4,16 +4,26 @@ import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 /** Copies `value` (a string or a lazy getter) to the clipboard, flashing a check. */
 export function CopyButton({
   value,
   className,
   label = "Copy",
+  copiedLabel = "Copied!",
+  tooltip = false,
 }: {
   value: string | (() => string);
   className?: string;
   label?: string;
+  copiedLabel?: string;
+  /** Show `label`/`copiedLabel` in a tooltip on hover. */
+  tooltip?: boolean;
 }) {
   const [copied, setCopied] = useState(false);
 
@@ -29,11 +39,11 @@ export function CopyButton({
     }
   };
 
-  return (
+  const button = (
     <button
       type="button"
       onClick={handleCopy}
-      aria-label={copied ? "Copied" : label}
+      aria-label={copied ? copiedLabel : label}
       className={cn(
         "inline-flex items-center justify-center rounded-md p-1 text-muted-foreground transition-colors hover:bg-foreground/10 hover:text-foreground",
         className,
@@ -45,5 +55,14 @@ export function CopyButton({
         <Copy className="size-3.5" />
       )}
     </button>
+  );
+
+  if (!tooltip) return button;
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{button}</TooltipTrigger>
+      <TooltipContent>{copied ? copiedLabel : label}</TooltipContent>
+    </Tooltip>
   );
 }
