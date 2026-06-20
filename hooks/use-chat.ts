@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { redirectToSessionExpired } from "@/lib/auth/expire";
+
 export interface ChatMessage {
   id: string | number;
   role: "user" | "assistant";
@@ -53,6 +55,12 @@ export function useChat(initialMessages: ChatMessage[] = []) {
           body: JSON.stringify({ question, model }),
         },
       );
+
+      // Token rejected mid-session — clear it and bounce to login.
+      if (response.status === 401) {
+        redirectToSessionExpired();
+        return;
+      }
 
       if (!response.ok || !response.body) {
         throw new Error(`Request failed (${response.status})`);

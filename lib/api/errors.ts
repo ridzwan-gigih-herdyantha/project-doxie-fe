@@ -1,3 +1,5 @@
+import { unstable_rethrow } from "next/navigation";
+
 import type { ApiValidationError } from "@/types/api";
 
 /**
@@ -38,5 +40,30 @@ function isValidationError(body: unknown): body is ApiValidationError {
     "errors" in body &&
     typeof (body as ApiValidationError).errors === "object"
   );
+}
+
+/** A failed Server Action result, carrying the API's own message. */
+export interface ErrorResult {
+  success: false;
+  message: string;
+  errors?: Record<string, string[]>;
+}
+
+export function toErrorResult(error: unknown): ErrorResult {
+  // Let redirect()/notFound() from the API client propagate.
+  unstable_rethrow(error);
+
+  if (error instanceof ApiError) {
+    return {
+      success: false,
+      message: error.message,
+      errors: error.validationErrors ?? undefined,
+    };
+  }
+
+  return {
+    success: false,
+    message: "Couldn't reach the server. Please try again.",
+  };
 }
 

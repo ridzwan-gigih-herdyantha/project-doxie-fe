@@ -1,7 +1,7 @@
 "use server";
 
 import { api } from "@/lib/api/client";
-import { ApiError } from "@/lib/api/errors";
+import { toErrorResult } from "@/lib/api/errors";
 
 export interface Message {
     id: number;
@@ -50,17 +50,7 @@ export async function deleteChat(id: string) {
     try {
         return await api.delete(`/chats/${id}`);
     } catch (error) {
-        if (error instanceof ApiError) {
-            return {
-                success: false,
-                message: error.message,
-            };
-        }
-
-        return {
-            success: false,
-            message: "Couldn't reach the server. Please try again.",
-        };
+        return toErrorResult(error);
     }
 }
 
@@ -70,18 +60,7 @@ export async function createSession(
     try {
         return await api.post<successCreateSessionResponse>(`/documents/${documentId}/session`);
     } catch (error) {
-        if (error instanceof ApiError) {
-            return {
-                success: false,
-                message: error.message,
-                errors: error.validationErrors ?? undefined,
-            };
-        }
-
-        return {
-            success: false,
-            message: "Couldn't reach the server. Please try again.",
-        }
+        return toErrorResult(error);
     }
 }
 
@@ -89,18 +68,7 @@ export async function listRecentChats(): Promise<successListSessionsResponse | e
     try {
         return await api.get<successListSessionsResponse>(`/sessions`);
     } catch (error) {
-        if (error instanceof ApiError) {
-            return {
-                success: false,
-                message: error.message,
-                errors: error.validationErrors ?? undefined,
-            };
-        }
-
-        return {
-            success: false,
-            message: "Couldn't reach the server. Please try again.",
-        }
+        return toErrorResult(error);
     }
 }
 
@@ -110,18 +78,7 @@ export async function listSessions(
     try {
         return await api.get<successListSessionsResponse>(`/documents/${documentId}/session`);
     } catch (error) {
-        if (error instanceof ApiError) {
-            return {
-                success: false,
-                message: error.message,
-                errors: error.validationErrors ?? undefined,
-            };
-        }
-
-        return {
-            success: false,
-            message: "Couldn't reach the server. Please try again.",
-        }
+        return toErrorResult(error);
     }
 }
 
@@ -131,17 +88,6 @@ export async function listChats(
     try {
         return await api.get<successListChatsResponse>(`/session/${chatSessionId}/messages`);
     } catch (error) {
-        if (error instanceof ApiError) {
-            return {
-                success: false,
-                message: error.message,
-                errors: error.validationErrors ?? undefined,
-            };
-        }
-
-        return {
-            success: false,
-            message: "Couldn't reach the server. Please try again.",
-        };
+        return toErrorResult(error);
     }
 }

@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { api } from "@/lib/api/client";
-import { ApiError } from "@/lib/api/errors";
+import { toErrorResult } from "@/lib/api/errors";
 
 export interface dataDocument {
     id: number;
@@ -49,18 +49,7 @@ export async function getDocument(id: string): Promise<documentResult> {
     try {
         return await api.get<successGetDocumentResponse>(`/documents/${id}`);
     } catch (error) {
-        if (error instanceof ApiError) {
-            return {
-                success: false,
-                message: error.message,
-                errors: error.validationErrors ?? undefined,
-            };
-        }
-
-        return {
-            success: false,
-            message: "Couldn't reach the server. Please try again.",
-        };
+        return toErrorResult(error);
     }
 }
 
@@ -76,14 +65,7 @@ export async function deleteDocument(
 
         return { success: true, message: res?.message ?? "Document deleted." };
     } catch (error) {
-        if (error instanceof ApiError) {
-            return { success: false, message: error.message };
-        }
-
-        return {
-            success: false,
-            message: "Couldn't reach the server. Please try again.",
-        };
+        return toErrorResult(error);
     }
 }
 
@@ -91,17 +73,6 @@ export async function listDocuments(): Promise<documentsResult>{
     try {
         return await api.get<successListDocumentsResponse>("/documents");
     } catch (error) {
-        if (error instanceof ApiError) {
-            return {
-                success: false,
-                message: error.message,
-                errors: error.validationErrors ?? undefined,
-            };
-        }
-
-        return {
-            success: false,
-            message: "Couldn't reach the server. Please try again.",
-        }            
+        return toErrorResult(error);
     }
 }

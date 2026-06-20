@@ -1,20 +1,12 @@
 import "server-only";
 
+import { redirect } from "next/navigation";
+
 import { serverEnv } from "@/lib/env";
 import { getToken } from "@/lib/auth/session";
 import { ApiError } from "@/lib/api/errors";
+import { SESSION_EXPIRED_PATH } from "@/lib/auth/expire";
 
-/**
- * Server-side client for the Laravel API.
- *
- * Use this inside Server Components, Route Handlers, and Server Actions. It runs
- * server-to-server, so there is no CORS involved and the Bearer token (read from
- * the httpOnly cookie) never reaches the browser.
- *
- * `fetch` is uncached by default in Next.js 16, which is what we want for
- * per-user authenticated data. Opt into caching per call with `cache` /
- * `next: { revalidate, tags }` when a resource is safe to cache.
- */
 
 export interface ApiRequestOptions extends Omit<RequestInit, "body"> {
   /** Plain object serialized to a JSON request body (sets Content-Type). */
@@ -46,6 +38,11 @@ async function request<T>(path: string, options: ApiRequestOptions = {}): Promis
 
   const url = `${serverEnv.laravelApiUrl}/${path.replace(/^\/+/, "")}`;
   const response = await fetch(url, { ...init, headers: finalHeaders, body: finalBody });
+
+
+  if (response.status === 401 && !skipAuth) {
+    redirect(SESSION_EXPIRED_PATH);
+  }
 
   // 204 No Content (and empty bodies) have nothing to parse.
   if (response.status === 204 || response.headers.get("content-length") === "0") {

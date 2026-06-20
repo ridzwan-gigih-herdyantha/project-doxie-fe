@@ -101,16 +101,13 @@ export async function register(
   return { success: true };
 }
 
-/** Translate an API failure into form state. */
+/** Translate an API failure into form state, surfacing the API's own message. */
 function toAuthError(error: unknown): AuthFormState {
   if (error instanceof ApiError) {
-    if (error.status === 401) {
-      return { error: "Email or password is incorrect" };
-    }
-    if (error.validationErrors) {
-      return { fieldErrors: error.validationErrors, error: error.message };
-    }
-    return { error: error.message };
+    return {
+      error: error.message,
+      fieldErrors: error.validationErrors ?? undefined,
+    };
   }
   return { error: "Couldn't connect to the server. Please try again later." };
 }
