@@ -58,10 +58,15 @@ async function request<T>(path: string, options: ApiRequestOptions = {}): Promis
     : await response.text();
 
   if (!response.ok) {
+    // Prefer the API's own message; fall back per-status for bodies with none.
+    const fallback =
+      response.status === 413
+        ? "The file is too large."
+        : response.statusText || `Request failed with status ${response.status}`;
     const message =
       typeof payload === "object" && payload !== null && "message" in payload
         ? String((payload as { message: unknown }).message)
-        : response.statusText || `Request failed with status ${response.status}`;
+        : fallback;
     throw new ApiError(response.status, message, payload);
   }
 

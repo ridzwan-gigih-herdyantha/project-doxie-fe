@@ -36,7 +36,6 @@ export function EditProfile({
   const fileRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState(defaultName);
   const [email, setEmail] = useState(defaultEmail);
-  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [avatarPreview, setAvatarPreview] = useState<string | null>(
@@ -67,11 +66,8 @@ export function EditProfile({
     if (!name.trim()) return toast.error("Name is required.");
     if (!email.trim()) return toast.error("Email is required.");
 
-    const changingPassword =
-      currentPassword !== "" || newPassword !== "" || confirmPassword !== "";
+    const changingPassword = newPassword !== "" || confirmPassword !== "";
     if (changingPassword) {
-      if (!currentPassword)
-        return toast.error("Enter your current password to change it.");
       if (newPassword.length < 8)
         return toast.error("New password must be at least 8 characters.");
       if (newPassword !== confirmPassword)
@@ -84,13 +80,11 @@ export function EditProfile({
       const result = await updateProfile({
         name: name,
         email: email.trim(),
-        currentPassword: changingPassword ? currentPassword : undefined,
         newPassword: changingPassword ? newPassword : undefined,
       });
 
       if (result.success) {
         toast.success(result.message, { id: toastId });
-        setCurrentPassword("");
         setNewPassword("");
         setConfirmPassword("");
       } else {
@@ -122,7 +116,7 @@ export function EditProfile({
               type="button"
               onClick={() => fileRef.current?.click()}
               aria-label="Change avatar"
-              className="absolute bottom-0 right-1 flex size-7 items-center justify-center rounded-full bg-[#68DBA9] text-[#141B2B] ring-4 ring-card transition-colors hover:bg-[#68DBA9]/90"
+              className="absolute bottom-0 right-1 flex size-7 items-center justify-center rounded-full bg-brand text-brand-foreground ring-4 ring-card transition-colors hover:bg-brand/90"
             >
               <Camera className="size-4" />
             </button>
@@ -189,17 +183,7 @@ export function EditProfile({
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-3">
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="currentPassword">Current password</Label>
-            <Input
-              id="currentPassword"
-              type="password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              autoComplete="current-password"
-            />
-          </div>
+        <div className="grid gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="newPassword">New password</Label>
             <Input
@@ -227,7 +211,7 @@ export function EditProfile({
         <Button
           type="submit"
           disabled={saving}
-          className="gap-2 bg-[#68DBA9] text-[#141B2B] hover:bg-[#68DBA9]/90"
+          className="gap-2 bg-brand text-brand-foreground hover:bg-brand/90"
         >
           {saving && <Spinner className="size-4" />}
           Save changes

@@ -3,7 +3,6 @@
 export interface UpdateProfileInput {
   name: string;
   email: string;
-  currentPassword?: string;
   newPassword?: string;
 }
 

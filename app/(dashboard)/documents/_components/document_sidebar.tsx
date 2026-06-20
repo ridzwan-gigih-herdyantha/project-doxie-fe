@@ -14,6 +14,7 @@ import {
 import { useChat, type ChatMessage } from "@/hooks/use-chat";
 import { getChatModel } from "@/lib/chat-model-store";
 import { Spinner } from "@/components/ui/spinner";
+import { CopyButton } from "@/components/ui/copy-button";
 import { Markdown } from "./markdown";
 import { listRecentChats } from "../../chats/action";
 import {
@@ -112,7 +113,7 @@ export function DocumentSidebar({
     <aside className="flex h-full w-7/12 min-w-0 shrink-0 flex-col overflow-hidden border-l border-border bg-sidebar">
       <header className="flex items-center justify-between gap-2 border-b border-border px-4 py-3">
         <div className="flex min-w-0 items-center gap-2">
-          <MessageSquare className="size-4 shrink-0 text-[#68DBA9]" />
+          <MessageSquare className="size-4 shrink-0 text-brand" />
           <div className="min-w-0">
             <p className="text-sm font-semibold leading-tight text-foreground">Chat</p>
             <p className="truncate text-xs text-muted-foreground">{documentTitle}</p>
@@ -149,14 +150,19 @@ export function DocumentSidebar({
               className={cn(
                 "min-w-0 max-w-[85%] rounded-lg px-3 py-2 text-sm",
                 m.role === "user"
-                  ? "bg-[#68DBA9] text-[#141B2B]"
+                  ? "bg-brand text-brand-foreground"
                   : "bg-muted text-foreground",
               )}
             >
               {m.role === "user" ? (
                 <span className="whitespace-pre-wrap">{m.content}</span>
               ) : m.content ? (
-                <Markdown>{m.content}</Markdown>
+                <>
+                  <Markdown>{m.content}</Markdown>
+                  <div className="mt-1 flex justify-end">
+                    <CopyButton value={m.content} label="Copy message" className="-mr-1" />
+                  </div>
+                </>
               ) : isStreaming ? (
                 <Spinner className="size-4" />
               ) : null}
@@ -184,7 +190,7 @@ export function DocumentSidebar({
           type="submit"
           size="icon"
           disabled={!canSend}
-          className="shrink-0 bg-[#68DBA9] text-[#141B2B] hover:bg-[#68DBA9]/90"
+          className="shrink-0 bg-brand text-brand-foreground hover:bg-brand/90"
         >
           <Send />
         </Button>

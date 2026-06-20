@@ -38,9 +38,14 @@ export async function uploadDocumentFile(file: File): Promise<UploadResult> {
   const payload = await res.json().catch(() => null);
 
   if (!res.ok) {
+    // 413 often has no JSON body (rejected by the web server), so give a clear fallback.
+    const fallback =
+      res.status === 413
+        ? "File is too large to upload. Please choose a smaller file."
+        : `Upload failed (HTTP ${res.status}).`;
     return {
       success: false,
-      message: payload?.message ?? `Upload failed (HTTP ${res.status}).`,
+      message: payload?.message ?? fallback,
       errors: payload?.errors,
     };
   }
