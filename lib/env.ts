@@ -24,4 +24,6 @@ function required(name: string): string {
 export const serverEnv = {
   /** Base URL of the Laravel API, e.g. http://localhost:8000/api */
   laravelApiUrl: required("LARAVEL_API_URL").replace(/\/+$/, ""),
+  /** Gate the admin-only runtime brand editor (and its inline init script). */
+  allowRuntimeBranding: process.env.ALLOW_RUNTIME_BRANDING === "true",
 } as const;

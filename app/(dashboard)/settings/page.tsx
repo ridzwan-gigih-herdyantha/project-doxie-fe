@@ -2,11 +2,14 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { getUser } from "@/lib/auth/session";
+import { serverEnv } from "@/lib/env";
+import { ADMIN_EMAIL } from "@/lib/brand-theme";
 import { listDocuments } from "../documents/action";
 import { BillingTab } from "./_components/billing-tab";
 import { EditProfile } from "./_components/edit-profile";
+import { BrandEditor } from "./_components/brand-editor";
 
-const TABS = [
+const BASE_TABS = [
   { value: "profile", label: "Profile" },
   { value: "workspace", label: "Workspace" },
   { value: "billing", label: "Billing" },
@@ -32,7 +35,12 @@ export default async function SettingsPage({
     searchParams,
   ]);
   const documentCount = result.success ? result.data.length : 0;
-  const activeTab = TABS.some((t) => t.value === tab) ? tab : "billing";
+  const isAdmin =
+    serverEnv.allowRuntimeBranding && user?.email === ADMIN_EMAIL;
+  const tabs = isAdmin
+    ? [...BASE_TABS, { value: "branding", label: "Branding" }]
+    : BASE_TABS;
+  const activeTab = tabs.some((t) => t.value === tab) ? tab : "billing";
 
   return (
     <div className="flex flex-col gap-6">
@@ -40,7 +48,7 @@ export default async function SettingsPage({
 
       <Tabs defaultValue={activeTab} className="gap-6">
         <TabsList variant="line" className="h-auto justify-start gap-6 rounded-none border-b border-border bg-transparent p-0">
-          {TABS.map((t) => (
+          {tabs.map((t) => (
             <TabsTrigger
               key={t.value}
               value={t.value}
@@ -67,6 +75,11 @@ export default async function SettingsPage({
         <TabsContent value="billing">
           <BillingTab documentCount={documentCount} limit={5} />
         </TabsContent>
+        {isAdmin && (
+          <TabsContent value="branding">
+            <BrandEditor />
+          </TabsContent>
+        )}
       </Tabs>
     </div>
   );

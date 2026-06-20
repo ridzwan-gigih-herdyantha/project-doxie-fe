@@ -10,6 +10,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CheckCircle2Icon } from "lucide-react";
 
+import { serverEnv } from "@/lib/env";
+
 const hankenGrotesk = Hanken_Grotesk({
   subsets: ["latin"],
   variable: "--font-hanken-grotesk",
@@ -68,9 +70,19 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`dark ${hankenGrotesk.variable} ${liberationSerif.variable} ${jetBrainsMono.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        {/* Re-apply a saved brand override before paint (no color flash).
+            Only injected when the runtime-branding feature is enabled. */}
+        {serverEnv.allowRuntimeBranding && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `(function(){try{var t=JSON.parse(localStorage.getItem("doxie_brand_theme"));if(!t)return;var m={brand:"--brand",brandStrong:"--brand-strong",brandDark:"--brand-dark",brandForeground:"--brand-foreground"};for(var k in m){if(t[k])document.documentElement.style.setProperty(m[k],t[k]);}}catch(e){}})();`,
+            }}
+          />
+        )}
         <NextTopLoader
           color="var(--brand)"
           height={3}
