@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronDown, MessageSquare, PanelRightClose, Send } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import {
   Tooltip,
@@ -93,13 +92,31 @@ export function DocumentSidebar({
   }, [isStreaming]);
 
   const canSend = input.trim() !== "" && sessionId !== undefined && !isStreaming;
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Grow the textarea with its content, up to a few lines.
+  const autoGrow = () => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${Math.min(el.scrollHeight, 128)}px`;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSend) return;
     const question = input.trim();
     setInput("");
+    if (textareaRef.current) textareaRef.current.style.height = "auto";
     sendMessage(sessionId!, question, getChatModel());
+  };
+
+  // Enter sends; Shift+Enter inserts a newline.
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
   };
 
   if (!open) {
@@ -197,7 +214,7 @@ export function DocumentSidebar({
           onClick={() => scrollToBottom()}
           aria-label="Scroll to latest"
           className={cn(
-            "absolute bottom-3 left-1/2 size-8 -translate-x-1/2 rounded-full bg-brand text-brand-foreground shadow-md transition-all duration-300 hover:bg-brand/90",
+            "absolute bottom-3 left-1/2 size-8 -translate-x-1/2 rounded-full bg-brand text-brand-foreground shadow-[0_0_16px_4px_rgba(0,0,0,0.55)] transition-all duration-300 hover:bg-brand/90",
             showScrollDown
               ? "translate-y-0 opacity-100"
               : "pointer-events-none translate-y-2 opacity-0",
@@ -208,19 +225,25 @@ export function DocumentSidebar({
       </div>
 
       <form
-        className="flex items-center gap-2 border-t border-border p-3"
+        className="flex items-end gap-2 border-t border-border p-3"
         onSubmit={handleSubmit}
       >
-        <Input
+        <textarea
+          ref={textareaRef}
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e) => {
+            setInput(e.target.value);
+            autoGrow();
+          }}
+          onKeyDown={handleKeyDown}
+          rows={1}
           placeholder={
             sessionId === undefined
               ? "No chat session for this document"
               : "Ask about this document…"
           }
           disabled={sessionId === undefined || isStreaming}
-          className="flex-1"
+          className="max-h-32 min-h-8 flex-1 resize-none rounded-sm border border-input bg-transparent px-2.5 py-1.5 text-sm leading-relaxed outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 dark:bg-input/30"
         />
         <Button
           type="submit"

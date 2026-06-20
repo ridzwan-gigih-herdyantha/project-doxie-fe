@@ -32,7 +32,7 @@ export function Markdown({
         "[&_a]:font-medium [&_a]:text-brand [&_a]:underline",
         "[&_strong]:font-semibold",
         "[&_h1]:text-base [&_h1]:font-semibold [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:font-semibold",
-        "[&_:not(pre)>code]:rounded [&_:not(pre)>code]:bg-black/30 [&_:not(pre)>code]:px-1 [&_:not(pre)>code]:py-0.5 [&_:not(pre)>code]:font-mono [&_:not(pre)>code]:text-xs",
+        "[&_:not(pre)>code]:rounded [&_:not(pre)>code]:bg-[#0B1018] [&_:not(pre)>code]:px-1 [&_:not(pre)>code]:py-0.5 [&_:not(pre)>code]:font-mono [&_:not(pre)>code]:text-xs [&_:not(pre)>code]:text-foreground",
         "[&_blockquote]:border-l-2 [&_blockquote]:border-border [&_blockquote]:pl-3 [&_blockquote]:text-muted-foreground",
         className,
       )}
@@ -50,7 +50,7 @@ function CodeBlock({ children }: { children?: React.ReactNode }) {
       <pre
         ref={ref}
         style={{ minWidth: 0, maxWidth: "100%", overflowX: "auto" }}
-        className="rounded-lg bg-black/40 p-3 text-xs"
+        className="rounded-lg bg-[#0B1018] p-3 text-xs text-foreground"
       >
         {children}
       </pre>
