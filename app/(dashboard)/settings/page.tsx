@@ -46,7 +46,7 @@ export default async function SettingsPage({
               value={t.value}
               className={cn(
                 "rounded-none border-0 border-b-4 border-transparent bg-transparent px-1 pb-3 font-mono text-sm text-muted-foreground shadow-none",
-                "data-[state=active]:border-[#68DBA9] data-[state=active]:bg-transparent data-[state=active]:text-[#68DBA9] data-[state=active]:shadow-none",
+                "data-[state=active]:border-brand data-[state=active]:bg-transparent data-[state=active]:text-brand data-[state=active]:shadow-none",
               )}
             >
               {t.label}

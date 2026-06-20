@@ -47,7 +47,7 @@ export default async function DashboardPage() {
           action={
             <Button
               size="default"
-              className="rounded-full bg-[#68DBA9] text-[#141B2B] text-[0.65rem] font-semibold uppercase tracking-wide hover:bg-[#68DBA9]/80"
+              className="rounded-full bg-brand text-brand-foreground text-[0.65rem] font-semibold uppercase tracking-wide hover:bg-brand/80"
             >
               Upgrade
             </Button>

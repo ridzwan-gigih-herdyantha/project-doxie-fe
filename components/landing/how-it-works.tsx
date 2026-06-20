@@ -38,7 +38,7 @@ export function HowItWorks() {
               key={s.title}
               className="rounded-xl border border-border bg-card p-6 ring-1 ring-foreground/5"
             >
-              <div className="flex size-10 items-center justify-center rounded-lg bg-[#68DBA9]/10 text-[#68DBA9]">
+              <div className="flex size-10 items-center justify-center rounded-lg bg-brand/10 text-brand">
                 <s.icon className="size-5" />
               </div>
               <h3 className="mt-4 font-semibold">{s.title}</h3>

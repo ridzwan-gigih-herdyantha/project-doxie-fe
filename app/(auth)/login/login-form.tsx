@@ -54,7 +54,7 @@ export function LoginForm() {
         <Checkbox id="remember" name="remember" value="true" />
         <label
           htmlFor="remember"
-          className="flex cursor-pointer items-start text-sm text-muted-foreground peer-data-[state=checked]:text-[#68DBA9]"
+          className="flex cursor-pointer items-start text-sm text-muted-foreground peer-data-[state=checked]:text-brand"
         >
           <span className="font-inter">Remember me for 30 days</span>
         </label>

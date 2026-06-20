@@ -17,8 +17,8 @@ export interface ActivityItem {
 }
 
 const KIND: Record<ActivityKind, { Icon: LucideIcon; className: string }> = {
-  chat: { Icon: MessageSquare, className: "text-[#68DBA9]" },
-  document: { Icon: FileText, className: "text-[#68DBA9]" },
+  chat: { Icon: MessageSquare, className: "text-brand" },
+  document: { Icon: FileText, className: "text-brand" },
   system: { Icon: Settings, className: "text-muted-foreground" },
 };
 
@@ -28,7 +28,7 @@ const SAMPLE: ActivityItem[] = [
     kind: "chat",
     title: (
       <>
-        New chat on <span className="text-[#68DBA9]">Q4 Report.pdf</span>
+        New chat on <span className="text-brand">Q4 Report.pdf</span>
       </>
     ),
     description: "“Can you summarize the Q3 financials?”",
@@ -39,7 +39,7 @@ const SAMPLE: ActivityItem[] = [
     kind: "document",
     title: (
       <>
-        Document <span className="text-[#68DBA9]">Product Spec v2.pdf</span> uploaded
+        Document <span className="text-brand">Product Spec v2.pdf</span> uploaded
       </>
     ),
     description: "Successfully parsed 12 pages of content.",
@@ -69,7 +69,7 @@ export default function RecentActivity({
         <h3 className="text-sm font-semibold text-foreground">Recent Activities</h3>
         <Link
           href={viewAllHref}
-          className="text-xs font-medium text-[#68DBA9] hover:underline"
+          className="text-xs font-medium text-brand hover:underline"
         >
           View all
         </Link>

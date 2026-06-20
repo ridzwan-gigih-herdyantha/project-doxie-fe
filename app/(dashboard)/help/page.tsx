@@ -106,9 +106,9 @@ export default function HelpPage() {
           <a
             key={c.title}
             href={c.href}
-            className="group rounded-xl border border-border bg-card p-5 ring-1 ring-foreground/5 transition-colors hover:border-[#68DBA9]/40"
+            className="group rounded-xl border border-border bg-card p-5 ring-1 ring-foreground/5 transition-colors hover:border-brand/40"
           >
-            <div className="flex size-10 items-center justify-center rounded-lg bg-[#68DBA9]/10 text-[#68DBA9]">
+            <div className="flex size-10 items-center justify-center rounded-lg bg-brand/10 text-brand">
               <c.icon className="size-5" />
             </div>
             <h3 className="mt-4 flex items-center gap-1 font-semibold">
@@ -132,7 +132,7 @@ export default function HelpPage() {
         <div className="grid gap-4 sm:grid-cols-3">
           {CONTACT.map((c) => (
             <Card key={c.title} className="gap-0 p-5">
-              <div className="flex size-10 items-center justify-center rounded-lg bg-[#68DBA9]/10 text-[#68DBA9]">
+              <div className="flex size-10 items-center justify-center rounded-lg bg-brand/10 text-brand">
                 <c.icon className="size-5" />
               </div>
               <h3 className="mt-4 font-semibold">{c.title}</h3>

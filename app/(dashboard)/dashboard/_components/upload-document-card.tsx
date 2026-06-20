@@ -58,8 +58,8 @@ export default function UploadDocumentCard() {
       disabled={isLoading}
       className={cn(
         "flex min-h-full flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border p-6 text-center transition-colors",
-        "hover:border-[#68DBA9]/50 hover:bg-[#68DBA9]/5",
-        isDragging && "border-[#68DBA9] bg-[#68DBA9]/10",
+        "hover:border-brand/50 hover:bg-brand/5",
+        isDragging && "border-brand bg-brand/10",
         isLoading && "pointer-events-none opacity-70",
       )}
     >

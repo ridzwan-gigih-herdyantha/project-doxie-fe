@@ -90,7 +90,7 @@ export function NewChatComposer({ documents }: { documents: dataDocument[] }) {
           disabled={!hasDocuments || creating}
         >
           <SelectTrigger className="w-auto max-w-[60%] gap-2">
-            <FileText className="size-4 text-[#68DBA9]" />
+            <FileText className="size-4 text-brand" />
             <SelectValue placeholder="Select a document" />
           </SelectTrigger>
           <SelectContent>
@@ -110,7 +110,7 @@ export function NewChatComposer({ documents }: { documents: dataDocument[] }) {
                 size="icon"
                 disabled={!canStart}
                 aria-label="Start chat"
-                className="bg-[#68DBA9] text-[#141B2B] hover:bg-[#68DBA9]/90"
+                className="bg-brand text-brand-foreground hover:bg-brand/90"
               >
                 {creating ? (
                   <Spinner className="size-4" />

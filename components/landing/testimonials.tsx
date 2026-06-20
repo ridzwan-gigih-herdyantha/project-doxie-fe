@@ -110,7 +110,7 @@ export function Testimonials() {
                 className="pl-4 md:basis-1/2 lg:basis-1/3"
               >
                 <figure className="flex h-full flex-col gap-4 rounded-xl border border-border bg-card p-6 ring-1 ring-foreground/5">
-                  <div className="flex gap-0.5 text-[#68DBA9]">
+                  <div className="flex gap-0.5 text-brand">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Star key={i} className="size-4 fill-current" />
                     ))}

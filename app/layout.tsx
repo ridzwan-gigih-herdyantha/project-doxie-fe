@@ -72,9 +72,9 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <NextTopLoader
-          color="#68DBA9"
+          color="var(--brand)"
           height={3}
-          shadow="0 0 10px #68DBA9, 0 0 5px #68DBA9"
+          shadow="0 0 10px var(--brand), 0 0 5px var(--brand)"
           showSpinner={false}
           crawlSpeed={200}
           speed={300}

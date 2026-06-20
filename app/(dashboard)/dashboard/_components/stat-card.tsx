@@ -79,7 +79,7 @@ export default function StatCard({
         {action ? (
           <div className="shrink-0">{action}</div>
         ) : icon ? (
-          <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-[#68DBA9]/10 text-[#68DBA9] ring-1 ring-[#68DBA9]/15 [&_svg]:size-5">
+          <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand ring-1 ring-brand/15 [&_svg]:size-5">
             {icon}
           </div>
         ) : null}

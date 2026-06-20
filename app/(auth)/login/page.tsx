@@ -56,7 +56,7 @@ export default function LoginPage() {
       <CardContent>
         <p className="text-muted-foreground mt-4 text-center text-sm font-inter">
           Don&apos;t have an account?{" "}
-          <a href="/register" className="text-[#68DBA9] font-medium hover:underline">
+          <a href="/register" className="text-brand font-medium hover:underline">
             Sign Up
           </a>
         </p>

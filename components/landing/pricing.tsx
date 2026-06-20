@@ -50,12 +50,12 @@ export function Pricing() {
               className={cn(
                 "relative flex flex-col gap-5 rounded-2xl p-6",
                 plan.featured
-                  ? "bg-[#34D399] text-[#0C1322]"
+                  ? "bg-brand-strong text-brand-foreground"
                   : "border border-border bg-card ring-1 ring-foreground/5",
               )}
             >
               {plan.featured && (
-                <span className="absolute right-6 top-6 rounded-full text-white/90 bg-[#00311F] px-3.5 py-1 text-[0.85rem] font-semibold">
+                <span className="absolute right-6 top-6 rounded-full text-white/90 bg-brand-foreground px-3.5 py-1 text-[0.85rem] font-semibold">
                   Most popular
                 </span>
               )}
@@ -65,7 +65,7 @@ export function Pricing() {
                 <p
                   className={cn(
                     "mt-1 text-sm",
-                    plan.featured ? "text-[#0C1322]/70" : "text-muted-foreground",
+                    plan.featured ? "text-brand-foreground/70" : "text-muted-foreground",
                   )}
                 >
                   {plan.caption}
@@ -77,7 +77,7 @@ export function Pricing() {
                 <span
                   className={cn(
                     "text-sm",
-                    plan.featured ? "text-[#0C1322]/70" : "text-muted-foreground",
+                    plan.featured ? "text-brand-foreground/70" : "text-muted-foreground",
                   )}
                 >
                   /mo
@@ -90,7 +90,7 @@ export function Pricing() {
                     <CircleCheck
                       className={cn(
                         "size-4 shrink-0",
-                        plan.featured ? "text-[#0C1322]" : "text-[#68DBA9]",
+                        plan.featured ? "text-brand-foreground" : "text-brand",
                       )}
                     />
                     {f}
@@ -103,7 +103,7 @@ export function Pricing() {
                 className={cn(
                   "mt-auto w-full",
                   plan.featured
-                    ? "bg-white text-[#0C1322] hover:bg-white/90"
+                    ? "bg-white text-brand-foreground hover:bg-white/90"
                     : "bg-muted text-foreground hover:bg-muted/80",
                 )}
               >

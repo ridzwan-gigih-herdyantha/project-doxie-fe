@@ -31,7 +31,7 @@ export function AuthField({ label, name, errors, id, ref_text, ref_link, ...prop
       <div className="flex items-center justify-between">
         <Label htmlFor={fieldId}>{label}</Label>
         {refText && (
-          <a href={refLink} className="text-xs text-[#68DBA9] hover:underline">
+          <a href={refLink} className="text-xs text-brand hover:underline">
             {refText}
           </a>
         )}
@@ -41,7 +41,7 @@ export function AuthField({ label, name, errors, id, ref_text, ref_link, ...prop
         name={name}
         aria-invalid={hasError}
         aria-describedby={errorId}
-        className="dark:bg-[#070E1D] border-[#3D4A42] focus:ring-[#3D4A42] data-[invalid]:ring-destructive data-[invalid]:focus:ring-destructive"
+        className="dark:bg-[#070E1D] [--autofill-bg:#070E1D] border-[#3D4A42] focus:ring-[#3D4A42] data-invalid:ring-destructive data-invalid:focus:ring-destructive"
         {...props}
       />
       {hasError && (

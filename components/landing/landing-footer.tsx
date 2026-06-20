@@ -1,5 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
+
+import { DoxieLogo } from "@/components/doxie-logo";
 
 const COLUMNS = [
   { title: "Product", links: ["Features", "Pricing", "API", "Enterprise"] },
@@ -13,14 +14,8 @@ export function LandingFooter() {
       <div className="mx-auto grid max-w-6xl gap-10 px-6 py-8 md:grid-cols-[1.6fr_1fr_1fr_1fr]">
         <div>
           <Link href="/" className="flex items-center gap-2">
-            <Image
-              src="/logo/doxie-logo-teal.svg"
-              alt="Doxie"
-              width={24}
-              height={24}
-              unoptimized
-            />
-            <span className="font-serif text-lg font-bold tracking-tight text-[#68DBA9]">
+            <DoxieLogo className="size-6" />
+            <span className="font-serif text-lg font-bold tracking-tight text-brand">
               Doxie
             </span>
           </Link>

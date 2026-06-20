@@ -89,7 +89,7 @@ function CurrentPlanCard({
           </div>
           <Progress
             value={percent}
-            className="mt-2 h-1.5 [&>[data-slot=progress-indicator]]:bg-[#68DBA9]"
+            className="mt-2 h-1.5 [&>[data-slot=progress-indicator]]:bg-brand"
           />
           {reached ? (
             <p className="mt-2 flex items-center gap-1.5 text-xs font-medium text-amber-500">
@@ -118,10 +118,10 @@ function CurrentPlanCard({
 
 function ProCard() {
   return (
-    <Card className="flex flex-col gap-0 border-0 bg-linear-to-br from-[#3DDC97] to-[#34D399] p-6 text-[#0C2A1E]">
+    <Card className="flex flex-col gap-0 border-0 bg-linear-to-br from-brand to-brand-strong p-6 text-brand-foreground">
       <div className="flex flex-1 flex-col">
         <div className="flex items-start justify-between">
-          <span className="rounded-md bg-[#0C2A1E]/15 px-2.5 py-1 text-xs font-semibold">
+          <span className="rounded-md bg-brand-foreground/15 px-2.5 py-1 text-xs font-semibold">
             Recommended
           </span>
           <p className="flex items-baseline gap-0.5 text-lg font-bold">
@@ -146,7 +146,7 @@ function ProCard() {
       </div>
 
       <Button
-        className="mt-6 w-full bg-[#0C2A1E] text-[#3DDC97] hover:bg-[#0C2A1E]/90"
+        className="mt-6 w-full bg-brand-foreground text-brand-strong hover:bg-brand-foreground/90"
         onClick={() => toast.success("Upgrade flow coming soon — this is a PoC.")}
       >
         Upgrade Now
@@ -163,7 +163,7 @@ function PaymentMethodsCard() {
         <button
           type="button"
           onClick={() => toast("Add payment method coming soon.")}
-          className="flex items-center gap-1.5 text-sm font-medium text-[#68DBA9] hover:underline"
+          className="flex items-center gap-1.5 text-sm font-medium text-brand hover:underline"
         >
           <Plus className="size-4" />
           Add method
@@ -213,7 +213,7 @@ function RecentInvoicesCard() {
       <button
         type="button"
         onClick={() => toast("Invoice history coming soon.")}
-        className="mt-5 block w-full text-center text-sm font-medium text-[#68DBA9] hover:underline"
+        className="mt-5 block w-full text-center text-sm font-medium text-brand hover:underline"
       >
         View all history
       </button>
@@ -241,7 +241,7 @@ function BillingPreferencesCard() {
               checked ? "Email receipts enabled." : "Email receipts disabled.",
             );
           }}
-          className="data-checked:bg-[#68DBA9]"
+          className="data-checked:bg-brand"
         />
       </div>
 
@@ -253,7 +253,7 @@ function BillingPreferencesCard() {
         <button
           type="button"
           onClick={() => toast("Edit Tax ID coming soon.")}
-          className="text-sm font-medium text-[#68DBA9] hover:underline"
+          className="text-sm font-medium text-brand hover:underline"
         >
           Edit
         </button>

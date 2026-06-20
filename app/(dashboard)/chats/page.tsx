@@ -18,7 +18,7 @@ export default async function ChatsPage() {
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 pt-8 pb-16">
       {/* Hero */}
       <div className="flex flex-col items-center gap-3 text-center">
-        <div className="flex size-12 items-center justify-center rounded-2xl bg-[#68DBA9]/10 text-[#68DBA9]">
+        <div className="flex size-12 items-center justify-center rounded-2xl bg-brand/10 text-brand">
           <Sparkles className="size-6" />
         </div>
         <h1 className="font-serif text-3xl font-bold tracking-tight">Doxie AI</h1>
@@ -44,9 +44,9 @@ export default async function ChatsPage() {
               <li key={s.id}>
                 <Link
                   href={`/documents/${s.document_id}?session=${s.id}`}
-                  className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 ring-1 ring-foreground/5 transition-colors hover:border-[#68DBA9]/40"
+                  className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 ring-1 ring-foreground/5 transition-colors hover:border-brand/40"
                 >
-                  <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#68DBA9]/10 text-[#68DBA9]">
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand">
                     <MessagesSquare className="size-4" />
                   </div>
                   <span className="truncate text-sm">

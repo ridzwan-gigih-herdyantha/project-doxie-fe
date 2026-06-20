@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { DoxieLogo } from "@/components/doxie-logo";
 import { NAV_FOOTER, NAV_SECTIONS } from "@/app/(dashboard)/_components/nav-config";
 import { ModalLogout } from "@/app/(dashboard)/_components/modal/modal-logout";
 import { cn } from "@/lib/utils";
@@ -79,16 +79,8 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton asChild size="lg">
               <Link href="/dashboard">
-                <Image
-                  src="/logo/doxie-logo-teal.svg"
-                  alt="Doxie"
-                  width={28}
-                  height={28}
-                  priority
-                  unoptimized
-                  className="size-7 shrink-0"
-                />
-                <span className="font-serif text-xl font-bold tracking-tight text-[#68DBA9]">
+                <DoxieLogo className="size-7 shrink-0" />
+                <span className="font-serif text-xl font-bold tracking-tight text-brand">
                   Doxie
                 </span>
               </Link>
@@ -122,14 +114,14 @@ export function AppSidebar() {
                     className={cn(
                       "relative",
                       active &&
-                        "bg-[#232A3A]! text-[#68DBA9]! hover:bg-[#232A3A]! hover:text-[#68DBA9]!",
+                        "bg-[#232A3A]! text-brand! hover:bg-[#232A3A]! hover:text-brand!",
                     )}
                   >
                     <Link href={section.href}>
                       {active && (
                         <span
                           aria-hidden
-                          className="absolute inset-y-0 left-0 w-[3px] bg-[#68DBA9]"
+                          className="absolute inset-y-0 left-0 w-[3px] bg-brand"
                         />
                       )}
                       <Icon />
@@ -201,14 +193,14 @@ export function AppSidebar() {
                   className={cn(
                     "relative",
                     active &&
-                      "bg-[#232A3A]! text-[#68DBA9]! hover:bg-[#232A3A]! hover:text-[#68DBA9]!",
+                      "bg-[#232A3A]! text-brand! hover:bg-[#232A3A]! hover:text-brand!",
                   )}
                 >
                   <Link href={section.href}>
                     {active && (
                       <span
                         aria-hidden
-                        className="absolute inset-y-0 left-0 w-[3px] bg-[#68DBA9]"
+                        className="absolute inset-y-0 left-0 w-[3px] bg-brand"
                       />
                     )}
                     <Icon />

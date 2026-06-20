@@ -23,13 +23,13 @@ export function Hero() {
     <section className="relative overflow-hidden">
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 py-18 lg:grid-cols-2 lg:py-24">
         <div className="flex flex-col gap-6">
-          <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-[#68DBA9]/30 bg-[#68DBA9]/10 px-3 py-1 text-xs font-medium text-[#68DBA9]">
+          <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-xs font-medium text-brand">
             <Sparkles className="size-3.5" />
             AI-Powered Document Intelligence
           </span>
 
           <h1 className="text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl">
-            Chat with your <span className="text-[#68DBA9]">documents</span> —
+            Chat with your <span className="text-brand">documents</span> —
             instantly.
           </h1>
 
@@ -42,7 +42,7 @@ export function Hero() {
             <Button
               asChild
               size="lg"
-              className="h-11 px-6 bg-[#68DBA9] text-[#0C1322] hover:bg-[#68DBA9]/90"
+              className="h-11 px-6 bg-brand text-brand-foreground hover:bg-brand/90"
             >
               <Link href="/register">
                 Get started free
@@ -53,7 +53,7 @@ export function Hero() {
               asChild 
               size="lg" 
               variant="default" 
-              className="h-11 px-6 bg-transparent border border-white text-white hover:bg-white/90 hover:text-[#0C1322] hover:border-[#0C1322]">
+              className="h-11 px-6 bg-transparent border border-white text-white hover:bg-white/90 hover:text-brand-foreground hover:border-[#0C1322]">
               <a href="#how-it-works">See how it works</a>
             </Button>
           </div>
@@ -62,7 +62,7 @@ export function Hero() {
         <div className="relative">
           <div
             aria-hidden
-            className="pointer-events-none absolute -inset-10 rounded-full bg-[#68DBA9]/15 blur-3xl"
+            className="pointer-events-none absolute -inset-10 rounded-full bg-brand/15 blur-3xl"
           />
           <div className="relative lg:-top-8">
             <AppPreview />

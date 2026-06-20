@@ -41,6 +41,10 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-foreground: var(--brand-foreground);
   --radius-sm: calc(var(--radius) * 0.4);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -55,14 +59,19 @@ body {
 }
 
 :root {
+  /* Brand accent — retheme the whole app from these. strong = lighter, dark = deeper. */
+  --brand: #E3B341;
+  --brand-strong: #F2C94C;
+  --brand-dark: #B5841F;
+  --brand-foreground: #0C1322;
   --background: #0C1322;
   --foreground: #DCE2F7;
   --card: #141B2B;
   --card-foreground: #DCE2F7;
   --popover: oklch(0.218 0.008 223.9);
   --popover-foreground: #DCE2F7;
-  --primary: #68DBA9;
-  --primary-foreground: oklch(0.979 0.021 166.113);
+  --primary: var(--brand);
+  --primary-foreground: var(--brand-foreground);
   --secondary: oklch(0.274 0.006 286.033);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.275 0.011 216.9);
@@ -90,14 +99,18 @@ body {
 }
 
 .dark {
+  --brand: #FFD615;
+  --brand-strong: #F9FF21;
+  --brand-dark: #C9A800;
+  --brand-foreground: #0C1322;
   --background: #0C1322;
   --foreground: #DCE2F7;
   --card: #141B2B;
   --card-foreground: #DCE2F7;
   --popover: oklch(0.218 0.008 223.9);
   --popover-foreground: #DCE2F7;
-  --primary: oklch(0.432 0.095 166.913);
-  --primary-foreground: oklch(0.979 0.021 166.113);
+  --primary: var(--brand);
+  --primary-foreground: var(--brand-foreground);
   --secondary: oklch(0.274 0.006 286.033);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.275 0.011 216.9);
@@ -134,6 +147,22 @@ body {
   html {
     @apply font-mono;
   }
+}
+
+/* Keep browser autofill dark instead of the default light/blue fill.
+   Unlayered so it beats Tailwind's utility layers; the inset shadow repaints
+   the field, --autofill-bg lets a field override the tone (login uses #070E1D). */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill {
+  --autofill-bg: var(--background);
+  -webkit-text-fill-color: var(--foreground);
+  -webkit-box-shadow: 0 0 0 1000px var(--autofill-bg) inset;
+  box-shadow: 0 0 0 1000px var(--autofill-bg) inset;
+  caret-color: var(--foreground);
+  transition: background-color 9999s ease-out 0s;
 }
 
 /* Themed scrollbars — thin, rounded, subtle; match the dark UI. */

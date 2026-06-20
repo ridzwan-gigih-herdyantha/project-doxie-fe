@@ -1,6 +1,5 @@
-import Image from "next/image";
-
 import { Card } from "@/components/ui/card";
+import { DoxieLogo } from "@/components/doxie-logo";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -8,15 +7,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       {/* <div className="absolute inset-0 bg-[#c9d609]" /> */}
       <div className="w-full max-w-sm">
         <div className="z-1 mb-6 flex flex-col items-center gap-4">
-          <Image
-            src="/logo/doxie-logo-teal.svg"
-            alt="Doxie"
-            width={56}
-            height={56}
-            priority
-            unoptimized
-          />
-          <span className="font-serif text-2xl font-bold tracking-tight text-[#68DBA9]">
+          <DoxieLogo className="size-14" />
+          <span className="font-serif text-2xl font-bold tracking-tight text-brand">
             Doxie
           </span>
         </div>

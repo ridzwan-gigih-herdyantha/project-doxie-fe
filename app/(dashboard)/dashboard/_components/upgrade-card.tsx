@@ -34,19 +34,19 @@ export default function UpgradeCard({ className }: { className?: string }) {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "@container relative justify-between gap-6 overflow-hidden bg-[#070E1D] p-6 ring-1 ring-[#68DBA9]/15 transition-all duration-200",
+        "@container relative justify-between gap-6 overflow-hidden bg-[#070E1D] p-6 ring-1 ring-brand/15 transition-all duration-200",
         className,
       )}
     >
       <div
         ref={glowRef}
         aria-hidden
-        className="pointer-events-none absolute size-30 rounded-full bg-[#07c573] blur-3xl transition-transform duration-150 ease-out"
+        className="pointer-events-none absolute size-30 rounded-full bg-brand-strong blur-3xl transition-transform duration-150 ease-out"
         style={{ transform: rest }}
       />
 
       <div className="relative flex flex-col gap-4">
-        <Sparkles className="size-6 text-[#68DBA9]" />
+        <Sparkles className="size-6 text-brand" />
 
         <div className="flex flex-col gap-1.5">
           <h3 className="text-lg font-semibold text-foreground">Unlock AI Power</h3>
@@ -59,7 +59,7 @@ export default function UpgradeCard({ className }: { className?: string }) {
         <ul className="flex flex-col gap-2">
           {FEATURES.map((feature) => (
             <li key={feature} className="flex items-center gap-2 text-sm text-foreground">
-              <CircleCheck className="size-4 shrink-0 text-[#68DBA9]" />
+              <CircleCheck className="size-4 shrink-0 text-brand" />
               {feature}
             </li>
           ))}
@@ -68,9 +68,9 @@ export default function UpgradeCard({ className }: { className?: string }) {
 
       <Button
         size="lg"
-        className="relative w-full border-0 font-semibold text-[#141B2B] bg-[#30da90]
-          shadow-[0_8px_14px_-4px_#30da90] hover:bg-[#07c573] hover:shadow-[0_3px_22px_-2px_#07c573]
-          active:shadow-[0_4px_14px_-4px_#07c573] transition-all duration-400
+        className="relative w-full border-0 font-semibold text-brand-foreground bg-brand-strong
+          shadow-[0_8px_14px_-4px_var(--brand-strong)] hover:bg-brand hover:shadow-[0_3px_22px_-2px_var(--brand)]
+          active:shadow-[0_4px_14px_-4px_var(--brand)] transition-all duration-400
           disabled:pointer-events-none disabled:opacity-50
           aria-disabled:pointer-events-none aria-disabled:opacity-50"
       >

@@ -58,6 +58,7 @@ export default function NewDocumentButton() {
                 const detail = result.errors
                     ? Object.values(result.errors).flat().join("\n")
                     : result.message;
+                console.log(detail);
                 toast.error(detail || "Failed to upload document", { id: toastId });
             }
         } finally {
@@ -80,7 +81,7 @@ export default function NewDocumentButton() {
                     onClick={handleFileInput}
                     size={collapsed ? "icon" : "default"}
                     className={cn(
-                        "gap-2 bg-[#68DBA9] text-[#141B2B] hover:bg-[#68DBA9]/80",
+                        "gap-2 bg-brand text-brand-foreground hover:bg-brand/80",
                         !collapsed && "w-full",
                     )}
                 >

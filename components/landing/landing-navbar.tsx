@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
+import { DoxieLogo } from "@/components/doxie-logo";
 
 const NAV_LINKS = [
   { label: "Features", href: "#features" },
@@ -14,15 +14,8 @@ export function LandingNavbar() {
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         <Link href="/" className="flex items-center gap-2">
-          <Image
-            src="/logo/doxie-logo-teal.svg"
-            alt="Doxie"
-            width={24}
-            height={24}
-            priority
-            unoptimized
-          />
-          <span className="font-serif text-lg font-bold tracking-tight text-[#68DBA9]">
+          <DoxieLogo className="size-6" />
+          <span className="font-serif text-lg font-bold tracking-tight text-brand">
             Doxie
           </span>
         </Link>
@@ -46,7 +39,7 @@ export function LandingNavbar() {
           <Button
             asChild
             size="sm"
-            className="bg-[#68DBA9] text-[#0C1322] hover:bg-[#68DBA9]/90"
+            className="bg-brand text-brand-foreground hover:bg-brand/90"
           >
             <Link href="/register">Get started</Link>
           </Button>

@@ -48,7 +48,7 @@ export function ChatNavbar() {
           {documentTitle && (
             <div className="flex items-center">
               <div className="flex min-w-0 items-center gap-2">
-                <FileText className="h-5 w-5 shrink-0 text-[#68DBA9]" />
+                <FileText className="h-5 w-5 shrink-0 text-brand" />
                 <h1
                   className="max-w-[200px] truncate text-sm font-semibold text-foreground"
                   title={documentTitle}
