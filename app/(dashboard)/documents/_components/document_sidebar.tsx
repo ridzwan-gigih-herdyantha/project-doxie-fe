@@ -15,6 +15,7 @@ import { getChatModel } from "@/lib/chat-model-store";
 import { Spinner } from "@/components/ui/spinner";
 import { CopyButton } from "@/components/ui/copy-button";
 import { Markdown } from "./markdown";
+import { setChatExport } from "@/lib/chat-export-store";
 import { listRecentChats } from "../../chats/action";
 import {
   clearRecentChatTitleLoading,
@@ -60,6 +61,12 @@ export function DocumentSidebar({
   useEffect(() => {
     if (atBottomRef.current) scrollToBottom("auto");
   }, [messages]);
+
+  // Expose the conversation to the navbar's Export button; clear on unmount.
+  useEffect(() => {
+    setChatExport({ messages, title: documentTitle });
+  }, [messages, documentTitle]);
+  useEffect(() => () => setChatExport({ messages: [], title: "chat" }), []);
 
   // Auto-send the first question once (new chat started from the composer).
   useEffect(() => {
