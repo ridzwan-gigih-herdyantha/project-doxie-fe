@@ -8,6 +8,7 @@ import { getDocument } from "../action";
 import { DocumentSidebar } from "../_components/document_sidebar";
 import { SetDocumentTitle } from "../_components/set-document-title";
 import { PdfViewerClient } from "../_components/pdf-viewer-client";
+import { DesktopOnly } from "../_components/desktop-only";
 import { listChats, listSessions } from "../../chats/action";
 
 type DocumentPromise = ReturnType<typeof getDocument>;
@@ -52,9 +53,11 @@ export default async function DocumentDetailPage({
 
   return (
     <div className="-m-6 flex h-[calc(100svh-3.5rem)] overflow-hidden">
-      <Suspense fallback={<DetailSkeleton />}>
-        <DocumentDetail documentPromise={documentPromise} />
-      </Suspense>
+      <DesktopOnly>
+        <Suspense fallback={<DetailSkeleton />}>
+          <DocumentDetail documentPromise={documentPromise} />
+        </Suspense>
+      </DesktopOnly>
 
       <Suspense fallback={<ChatSkeleton />}>
         <ChatPanel
@@ -81,9 +84,6 @@ async function DocumentDetail({
 
   return (
     <>
-      {/* Shares the title with the navbar (no refetch). */}
-      <SetDocumentTitle title={doc.title} />
-
       <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-6 pt-4 pb-2">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
@@ -129,15 +129,21 @@ async function ChatPanel({
 }) {
   const [docResult, chat] = await Promise.all([documentPromise, chatPromise]);
   const documentTitle = docResult.success ? docResult.data.title : "Document";
+  const fileUrl = docResult.success ? docResult.data.file_url : undefined;
 
   return (
-    <DocumentSidebar
-      key={chat.sessionId ?? documentId}
-      documentTitle={documentTitle}
-      sessionId={chat.sessionId}
-      messages={chat.messages}
-      initialQuestion={initialQuestion}
-    />
+    <>
+      {/* Shares the title with the navbar; runs on mobile too (PDF column is desktop-only). */}
+      <SetDocumentTitle title={documentTitle} />
+      <DocumentSidebar
+        key={chat.sessionId ?? documentId}
+        documentTitle={documentTitle}
+        fileUrl={fileUrl}
+        sessionId={chat.sessionId}
+        messages={chat.messages}
+        initialQuestion={initialQuestion}
+      />
+    </>
   );
 }
 

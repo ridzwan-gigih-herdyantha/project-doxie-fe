@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, MessageSquare, PanelRightClose, Send } from "lucide-react";
+import {
+  ChevronDown,
+  FileText,
+  MessageSquare,
+  PanelRightClose,
+  Send,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -10,6 +16,14 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { PdfViewerClient } from "./pdf-viewer-client";
 import { useChat, type ChatMessage } from "@/hooks/use-chat";
 import { getChatModel } from "@/lib/chat-model-store";
 import { Spinner } from "@/components/ui/spinner";
@@ -20,12 +34,15 @@ import { refreshRecentChats } from "@/lib/recent-chats-store";
 
 export function DocumentSidebar({
   documentTitle = "Document",
+  fileUrl,
   sessionId,
   messages: initialMessages = [],
   initialQuestion,
   defaultOpen = true,
 }: {
   documentTitle?: string;
+  /** PDF URL — opens in a Sheet on mobile (where the inline viewer is hidden). */
+  fileUrl?: string;
   sessionId?: string;
   messages?: ChatMessage[];
   /** First message to auto-send on mount (e.g. from the /chats composer). */
@@ -136,7 +153,7 @@ export function DocumentSidebar({
   }
 
   return (
-    <aside className="flex h-full w-7/12 min-w-0 shrink-0 flex-col overflow-hidden border-l border-border bg-sidebar">
+    <aside className="flex h-full w-full min-w-0 shrink-0 flex-col overflow-hidden border-l border-border bg-sidebar md:w-7/12">
       <header className="flex items-center justify-between gap-2 border-b border-border px-4 py-3">
         <div className="flex min-w-0 items-center gap-2">
           <MessageSquare className="size-4 shrink-0 text-brand" />
@@ -145,14 +162,44 @@ export function DocumentSidebar({
             <p className="truncate text-xs text-muted-foreground">{documentTitle}</p>
           </div>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setOpen(false)}
-          aria-label="Collapse chat"
-        >
-          <PanelRightClose />
-        </Button>
+        <div className="flex items-center gap-1">
+          {fileUrl && (
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="md:hidden"
+                  aria-label="View document"
+                >
+                  <FileText />
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                side="left"
+                className="flex w-[92%] flex-col gap-0 p-0 sm:max-w-md"
+              >
+                <SheetHeader className="shrink-0 border-b border-border px-4 py-3 text-left">
+                  <SheetTitle className="truncate max-h-6 pr-8 text-sm">
+                    {documentTitle}
+                  </SheetTitle>
+                </SheetHeader>
+                <div className="min-h-0 flex-1 p-3">
+                  <PdfViewerClient url={fileUrl} className="h-full" />
+                </div>
+              </SheetContent>
+            </Sheet>
+          )}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setOpen(false)}
+            aria-label="Collapse chat"
+            className="hidden md:inline-flex"
+          >
+            <PanelRightClose />
+          </Button>
+        </div>
       </header>
 
       <div className="relative min-w-0 flex-1 overflow-hidden">
