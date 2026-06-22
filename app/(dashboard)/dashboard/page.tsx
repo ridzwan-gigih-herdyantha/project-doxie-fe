@@ -8,6 +8,7 @@ import DocumentCard from "./_components/document-card";
 import UploadDocumentCard from "./_components/upload-document-card";
 import RecentActivity from "./_components/recent-activity";
 import UpgradeCard from "./_components/upgrade-card";
+import Link from "next/link";
 
 export default async function DashboardPage() {
   const result = await listDocuments();
@@ -45,12 +46,14 @@ export default async function DashboardPage() {
           title="Current Plan"
           value="Free"
           action={
-            <Button
-              size="default"
-              className="rounded-full bg-brand text-brand-foreground text-[0.65rem] font-semibold uppercase tracking-wide hover:bg-brand/80"
-            >
-              Upgrade
-            </Button>
+            <Link href="/settings?tab=billing">
+              <Button
+                size="default"
+                className="rounded-full bg-brand text-brand-foreground text-[0.65rem] font-semibold uppercase tracking-wide hover:bg-brand/80"
+              >
+                Upgrade
+              </Button>
+            </Link>
           }
         />
       </div>

@@ -6,6 +6,7 @@ import { CircleCheck, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const FEATURES = ["GPT-4o Integration", "Custom Workspaces"];
 
@@ -66,16 +67,18 @@ export default function UpgradeCard({ className }: { className?: string }) {
         </ul>
       </div>
 
-      <Button
-        size="lg"
-        className="relative w-full border-0 font-semibold text-brand-foreground bg-brand-strong
-          shadow-[0_8px_14px_-4px_var(--brand-strong)] hover:bg-brand hover:shadow-[0_3px_22px_-2px_var(--brand)]
-          active:shadow-[0_4px_14px_-4px_var(--brand)] transition-all duration-400
-          disabled:pointer-events-none disabled:opacity-50
-          aria-disabled:pointer-events-none aria-disabled:opacity-50"
-      >
-        Upgrade to Pro
-      </Button>
+      <Link href="/settings?tab=billing"> 
+        <Button
+          size="lg"
+          className="relative w-full border-0 font-semibold text-brand-foreground bg-brand-strong
+            shadow-[0_8px_14px_-4px_var(--brand-strong)] hover:bg-brand hover:shadow-[0_3px_22px_-2px_var(--brand)]
+            active:shadow-[0_4px_14px_-4px_var(--brand)] transition-all duration-400
+            disabled:pointer-events-none disabled:opacity-50
+            aria-disabled:pointer-events-none aria-disabled:opacity-50"
+        >
+          Upgrade to Pro
+        </Button>
+      </Link>
     </Card>
   );
 }
