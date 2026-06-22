@@ -37,7 +37,7 @@ export function DeleteDocumentButton({
     <AlertDialog.Root open={open} onOpenChange={setOpen}>
       <AlertDialog.Trigger asChild>
         <Button
-          variant="outline"
+          variant="destructive"
           size="icon"
           aria-label="Delete document"
           className="shrink-0 border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
