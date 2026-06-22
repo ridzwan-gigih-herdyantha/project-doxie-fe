@@ -4,9 +4,15 @@ import { redirectToSessionExpired } from "@/lib/auth/expire";
 
 export interface ChatMessage {
   id: string | number;
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "role-assistant" | "agent";
   content: string;
 }
+
+const MODEL_ROLES: Record<string, ChatMessage["role"]> = {
+  "gpt-4o": "role-assistant",
+  "claude-3-5-sonnet-20241022": "agent",
+  "gemini-2.5-flash": "assistant",
+};
 
 /**
  * Chat state + SSE streaming for a document's chat session.
@@ -29,10 +35,12 @@ export function useChat(initialMessages: ChatMessage[] = []) {
     const userId = crypto.randomUUID();
     const assistantId = crypto.randomUUID();
 
+    const modelRole: ChatMessage["role"] = MODEL_ROLES[model] ?? "assistant";
+
     setMessages((prev) => [
       ...prev,
       { id: userId, role: "user", content: question },
-      { id: assistantId, role: "assistant", content: "" },
+      { id: assistantId, role: modelRole, content: "" },
     ]);
     setIsStreaming(true);
 
