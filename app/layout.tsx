@@ -4,6 +4,7 @@ import { Hanken_Grotesk, JetBrains_Mono, Inter } from "next/font/google";
 
 import "@/app/globals.css";
 
+import Script from "next/script";
 import NextTopLoader from "nextjs-toploader";
 
 import { Toaster } from "@/components/ui/sonner";
@@ -78,11 +79,9 @@ export default function RootLayout({
         {/* Re-apply a saved brand override before paint (no color flash).
             Only injected when the runtime-branding feature is enabled. */}
         {serverEnv.allowRuntimeBranding && (
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `(function(){try{var t=JSON.parse(localStorage.getItem("doxie_brand_theme"));if(!t)return;var m={brand:"--brand",brandStrong:"--brand-strong",brandDark:"--brand-dark",brandForeground:"--brand-foreground"};for(var k in m){if(t[k])document.documentElement.style.setProperty(m[k],t[k]);}}catch(e){}})();`,
-            }}
-          />
+          <Script id="brand-theme-init" strategy="beforeInteractive">
+            {`(function(){try{var t=JSON.parse(localStorage.getItem("doxie_brand_theme"));if(!t)return;var m={brand:"--brand",brandStrong:"--brand-strong",brandDark:"--brand-dark",brandForeground:"--brand-foreground"};for(var k in m){if(t[k])document.documentElement.style.setProperty(m[k],t[k]);}}catch(e){}})();`}
+          </Script>
         )}
         <NextTopLoader
           color="var(--brand)"

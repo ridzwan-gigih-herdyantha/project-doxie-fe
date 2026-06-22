@@ -9,14 +9,20 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Link } from "lucide-react";
 import Image from "next/image";
+import { redirect } from "next/navigation";
+import { getToken } from "@/lib/auth/session";
 
 export const metadata: Metadata = {
   title: "Sign In",
 };
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const token = await getToken();
+  if (token) {
+    redirect("/dashboard?notice=already-authed");
+  }
+
   return (
     <>
       <CardHeader className="text-center">
