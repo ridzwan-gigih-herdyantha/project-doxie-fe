@@ -92,47 +92,48 @@ export function AppSidebar() {
           <NewDocumentButton/>
         </SidebarMenu>
           {/* <SidebarGroupLabel>Menu</SidebarGroupLabel> */}
-          <SidebarMenu className="gap-1">
-            {NAV_SECTIONS.map((section) => {
-              const active =
-                pathname === section.href ||
-                pathname.startsWith(`${section.href}/`);
-              const Icon = section.icon;
+        <SidebarMenu className="gap-1">
+          {NAV_SECTIONS.map((section) => {
+            const active =
+              pathname === section.href ||
+              pathname.startsWith(`${section.href}/`);
+            const Icon = section.icon;
 
-              return (
-                <SidebarMenuItem key={section.key}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={active}
-                    tooltip={section.label}
-                    className={cn(
-                      "relative",
-                      active &&
-                        "bg-[#232A3A]! text-brand! hover:bg-[#232A3A]! hover:text-brand!",
+            return (
+              <SidebarMenuItem key={section.key}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={active}
+                  tooltip={section.label}
+                  className={cn(
+                    "relative",
+                    active &&
+                      "bg-[#232A3A]! text-brand! hover:bg-[#232A3A]! hover:text-brand!",
+                  )}
+                >
+                  <Link href={section.href}>
+                    {active && (
+                      <span
+                        aria-hidden
+                        className="absolute inset-y-0 left-0 w-[3px] bg-brand"
+                      />
                     )}
-                  >
-                    <Link href={section.href}>
-                      {active && (
-                        <span
-                          aria-hidden
-                          className="absolute inset-y-0 left-0 w-[3px] bg-brand"
-                        />
-                      )}
-                      <Icon />
-                      <span>{section.label}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              );
-            })}
-          </SidebarMenu>
+                    <Icon />
+                    <span>{section.label}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })}
+        </SidebarMenu>
       </SidebarHeader>
 
-          <SidebarGroupLabel className="text-sm">Recent Chats</SidebarGroupLabel>
       <SidebarContent>
-        
         {/* <SidebarSeparator/> */}
         <SidebarGroup>
+          <SidebarGroupLabel className="sticky top-0 z-10 bg-sidebar text-sm group-data-[collapsible=icon]:hidden">
+            Recent Chats
+          </SidebarGroupLabel>
           <SidebarMenu className="gap-1">
             {!loaded ? (
               ["w-3/4", "w-1/2", "w-2/3", "w-4/5"].map((w, i) => (
