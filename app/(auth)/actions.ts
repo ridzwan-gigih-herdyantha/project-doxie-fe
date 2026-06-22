@@ -9,7 +9,7 @@ interface AuthResponse {
   message: string;
   data: {
     user: {
-      id: number;
+      uuid: string;
       name: string;
       email: string;
       avatar_url?: string | null;

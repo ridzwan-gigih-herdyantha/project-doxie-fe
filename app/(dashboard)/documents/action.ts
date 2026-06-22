@@ -4,6 +4,12 @@ import { revalidatePath } from "next/cache";
 
 import { api } from "@/lib/api/client";
 import { toErrorResult } from "@/lib/api/errors";
+import { getToken } from "@/lib/auth/session";
+
+/** Bearer token for the browser-direct upload (bypasses Vercel's 4.5MB proxy limit). */
+export async function getUploadToken(): Promise<string | null> {
+    return getToken();
+}
 
 export interface dataDocument {
     uuid: string;

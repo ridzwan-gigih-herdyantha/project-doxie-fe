@@ -35,7 +35,7 @@ export default async function DashboardLayout({
       }
     >
       <AppSidebar/>
-      {user && <DocumentStatusListener userId={user.id} />}
+      {user && <DocumentStatusListener userId={user.uuid} />}
       <Suspense fallback={null}>
         <NoticeToaster />
       </Suspense>

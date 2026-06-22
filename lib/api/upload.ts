@@ -1,4 +1,8 @@
 import { redirectToSessionExpired } from "@/lib/auth/expire";
+import { getUploadToken } from "@/app/(dashboard)/documents/action";
+
+// Public Laravel base URL — upload goes browser→API directly (no Vercel function).
+const API_URL = (process.env.NEXT_PUBLIC_LARAVEL_API_URL ?? "").replace(/\/+$/, "");
 
 export interface UploadedDocument {
   user_id: number;
@@ -15,14 +19,28 @@ export type UploadResult =
 
 
 export async function uploadDocumentFile(file: File): Promise<UploadResult> {
+  // Without this, the fetch becomes relative and hits Next (Server Action 1MB cap).
+  if (!API_URL) {
+    return {
+      success: false,
+      message: "Upload isn't configured: set NEXT_PUBLIC_LARAVEL_API_URL and restart.",
+    };
+  }
+
   const formData = new FormData();
   formData.append("file", file);
 
+  const token = await getUploadToken();
+
   let res: Response;
   try {
-    // No Content-Type header — the browser sets multipart with the boundary.
-    res = await fetch("/api/backend/documents", {
+    // Direct to Laravel; no Content-Type header so the browser sets the boundary.
+    res = await fetch(`${API_URL}/documents`, {
       method: "POST",
+      headers: {
+        Accept: "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
       body: formData,
     });
   } catch {

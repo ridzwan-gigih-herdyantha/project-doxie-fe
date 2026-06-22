@@ -48,7 +48,7 @@ const USER_COOKIE = "doxie_user";
 
 /** The authenticated user returned by the Laravel login/register endpoints. */
 export interface SessionUser {
-  id: number;
+  uuid: string;
   name: string;
   email: string;
   avatar_url: string | null;
