@@ -28,7 +28,7 @@ export function useChat(initialMessages: ChatMessage[] = []) {
   const [isStreaming, setIsStreaming] = useState(false);
 
   const sendMessage = async (
-    chatSessionId: number,
+    chatSessionId: string,
     question: string,
     model: string,
   ) => {

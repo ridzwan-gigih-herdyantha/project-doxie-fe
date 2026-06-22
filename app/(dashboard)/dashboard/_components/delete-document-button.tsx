@@ -13,7 +13,7 @@ export function DeleteDocumentButton({
   id,
   title,
 }: {
-  id: number;
+  id: string;
   title: string;
 }) {
   const router = useRouter();
@@ -53,7 +53,7 @@ export function DeleteDocumentButton({
             Delete document?
           </AlertDialog.Title>
           <AlertDialog.Description className="mt-1.5 text-sm text-muted-foreground">
-            <span className="font-medium text-foreground">{title}</span> will be
+            <span className="font-medium text-foreground wrap-break-word">{title} </span> will be
             permanently removed. This can&apos;t be undone.
           </AlertDialog.Description>
 

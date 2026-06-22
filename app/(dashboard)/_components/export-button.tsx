@@ -23,6 +23,8 @@ import type { ChatMessage } from "@/hooks/use-chat";
 
 type ExportFormat = "json" | "text";
 
+const EMPTY_MESSAGES: ChatMessage[] = [];
+
 function slugify(value: string) {
   return (
     value
@@ -59,7 +61,7 @@ export default function ExportButton() {
   const messages = useSyncExternalStore(
     subscribeChatExport,
     getChatExportMessages,
-    () => [] as ChatMessage[],
+    () => EMPTY_MESSAGES,
   );
   const title = useSyncExternalStore(
     subscribeChatExport,

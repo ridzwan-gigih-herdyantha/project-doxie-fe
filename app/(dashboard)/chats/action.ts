@@ -4,9 +4,9 @@ import { api } from "@/lib/api/client";
 import { toErrorResult } from "@/lib/api/errors";
 
 export interface Message {
-    id: number;
-    chat_session_id: number;
-    role: "user" | "assistant";
+    uuid: string;
+    chat_session_id: string;
+    role: "user" | "assistant" | "role-assistant" | "agent";
     content: string;
     model_used: string | null;
     created_at: string;
@@ -14,10 +14,9 @@ export interface Message {
 }
 
 export interface Session {
-    id: number;
-    user_id: number;
-    document_id: number;
-    title: string;
+    uuid: string;
+    document_uuid: string;
+    title: string | null;
     created_at: string;
     updated_at: string;
 }
@@ -32,6 +31,22 @@ export interface successListSessionsResponse {
     success: true;
     message: string;
     data: Session[];
+}
+
+/** Cursor pagination info — sent alongside the list in a top-level `meta`. */
+interface CursorMeta {
+    next_cursor: string | null;
+    prev_cursor: string | null;
+    next_page_url: string | null;
+    prev_page_url: string | null;
+    per_page: number;
+}
+
+export interface successRecentChatsResponse {
+    success: true;
+    message: string;
+    data: Session[];
+    nextCursor: string | null;
 }
 
 export interface successCreateSessionResponse {
@@ -55,7 +70,7 @@ export async function deleteChat(id: string) {
 }
 
 export async function createSession(
-    documentId: number,
+    documentId: string,
 ): Promise<successCreateSessionResponse | errorResponse> {
     try {
         return await api.post<successCreateSessionResponse>(`/documents/${documentId}/session`);
@@ -64,16 +79,31 @@ export async function createSession(
     }
 }
 
-export async function listRecentChats(): Promise<successListSessionsResponse | errorResponse> {
+export async function listRecentChats(
+    params?: { cursor?: string | null; perPage?: number },
+): Promise<successRecentChatsResponse | errorResponse> {
+    const search = new URLSearchParams();
+    if (params?.perPage) search.set("per_page", String(params.perPage));
+    if (params?.cursor) search.set("cursor", params.cursor);
+    const qs = search.toString();
+
     try {
-        return await api.get<successListSessionsResponse>(`/sessions`);
+        const res = await api.get<{ success: true; message: string; data: Session[]; meta: CursorMeta }>(
+            `/sessions${qs ? `?${qs}` : ""}`,
+        );
+        return {
+            success: true,
+            message: res.message,
+            data: res.data ?? [],
+            nextCursor: res.meta?.next_cursor ?? null,
+        };
     } catch (error) {
         return toErrorResult(error);
     }
 }
 
 export async function listSessions(
-    documentId: number,
+    documentId: string,
 ): Promise<successListSessionsResponse | errorResponse> {
     try {
         return await api.get<successListSessionsResponse>(`/documents/${documentId}/session`);
@@ -83,7 +113,7 @@ export async function listSessions(
 }
 
 export async function listChats(
-    chatSessionId: number,
+    chatSessionId: string,
 ): Promise<successListChatsResponse | errorResponse> {
     try {
         return await api.get<successListChatsResponse>(`/session/${chatSessionId}/messages`);

@@ -44,7 +44,7 @@ export function NewChatComposer({ documents }: { documents: dataDocument[] }) {
     setCreating(true);
     const toastId = toast.loading("Starting a new chat…");
     try {
-      const result = await createSession(Number(documentId));
+      const result = await createSession(documentId);
       if (!result.success) {
         toast.error(result.message, { id: toastId });
         return;
@@ -53,7 +53,7 @@ export function NewChatComposer({ documents }: { documents: dataDocument[] }) {
       addRecentChat(result.data);
       const q = encodeURIComponent(question.trim());
       router.push(
-        `/documents/${documentId}?session=${result.data.id}&q=${q}`,
+        `/documents/${documentId}?session=${result.data.uuid}&q=${q}`,
       );
     } catch (error) {
       console.error(error);
@@ -95,7 +95,7 @@ export function NewChatComposer({ documents }: { documents: dataDocument[] }) {
           </SelectTrigger>
           <SelectContent>
             {documents.map((doc) => (
-              <SelectItem key={doc.id} value={String(doc.id)}>
+              <SelectItem key={doc.uuid} value={doc.uuid}>
                 {doc.title}
               </SelectItem>
             ))}

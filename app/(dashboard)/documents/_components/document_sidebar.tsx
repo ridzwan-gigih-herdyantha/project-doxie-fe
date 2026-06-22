@@ -16,11 +16,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { CopyButton } from "@/components/ui/copy-button";
 import { Markdown } from "./markdown";
 import { setChatExport } from "@/lib/chat-export-store";
-import { listRecentChats } from "../../chats/action";
-import {
-  clearRecentChatTitleLoading,
-  setRecentChats,
-} from "@/lib/recent-chats-store";
+import { refreshRecentChats } from "@/lib/recent-chats-store";
 
 export function DocumentSidebar({
   documentTitle = "Document",
@@ -30,7 +26,7 @@ export function DocumentSidebar({
   defaultOpen = true,
 }: {
   documentTitle?: string;
-  sessionId?: number;
+  sessionId?: string;
   messages?: ChatMessage[];
   /** First message to auto-send on mount (e.g. from the /chats composer). */
   initialQuestion?: string;
@@ -85,15 +81,8 @@ export function DocumentSidebar({
     wasStreamingRef.current = isStreaming;
     if (!finished) return;
 
-    const timer = setTimeout(async () => {
-      try {
-        const res = await listRecentChats();
-        if (res.success) setRecentChats(res.data);
-        else clearRecentChatTitleLoading();
-      } catch (error) {
-        console.error(error);
-        clearRecentChatTitleLoading();
-      }
+    const timer = setTimeout(() => {
+      refreshRecentChats();
     }, 600);
     return () => clearTimeout(timer);
   }, [isStreaming]);

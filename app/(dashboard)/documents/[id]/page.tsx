@@ -20,18 +20,18 @@ function formatBytes(bytes: number): string {
   return `${(bytes / 1024 ** i).toFixed(i ? 1 : 0)} ${units[i]}`;
 }
 
-async function loadChat(documentId: number, session?: string) {
-  let sessionId = session ? Number(session) : undefined;
+async function loadChat(documentId: string, session?: string) {
+  let sessionId = session || undefined;
 
   if (!sessionId) {
     const sessions = await listSessions(documentId);
-    if (sessions.success) sessionId = sessions.data[0]?.id;
+    if (sessions.success) sessionId = sessions.data[0]?.uuid;
   }
   if (!sessionId) return { sessionId: undefined, messages: [] };
 
   const chats = await listChats(sessionId);
   const messages = chats.success
-    ? chats.data.map((m) => ({ id: m.id, role: m.role, content: m.content }))
+    ? chats.data.map((m) => ({ id: m.uuid, role: m.role, content: m.content }))
     : [];
 
   return { sessionId, messages };
@@ -48,7 +48,7 @@ export default async function DocumentDetailPage({
   const { session, q } = await searchParams;
 
   const documentPromise = getDocument(id);
-  const chatPromise = loadChat(Number(id), session);
+  const chatPromise = loadChat(id, session);
 
   return (
     <div className="-m-6 flex h-[calc(100svh-3.5rem)] overflow-hidden">
@@ -58,7 +58,7 @@ export default async function DocumentDetailPage({
 
       <Suspense fallback={<ChatSkeleton />}>
         <ChatPanel
-          documentId={Number(id)}
+          documentId={id}
           documentPromise={documentPromise}
           chatPromise={chatPromise}
           initialQuestion={q}
@@ -122,7 +122,7 @@ async function ChatPanel({
   chatPromise,
   initialQuestion,
 }: {
-  documentId: number;
+  documentId: string;
   documentPromise: DocumentPromise;
   chatPromise: ChatPromise;
   initialQuestion?: string;

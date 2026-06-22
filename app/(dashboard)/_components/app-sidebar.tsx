@@ -22,15 +22,17 @@ import {
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useSyncExternalStore } from "react";
-import { MessageSquare } from "lucide-react";
+import { ChevronDown, MessageSquare } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import NewDocumentButton from "./new-document-button";
-import { listRecentChats } from "../chats/action";
 import {
   getLoadingTitleIds,
   getRecentChats,
+  hasMoreRecentChats,
+  isLoadingMoreRecentChats,
   isRecentChatsLoaded,
-  markRecentChatsLoaded,
-  setRecentChats,
+  loadMoreRecentChats,
+  seedRecentChats,
   subscribeRecentChats,
 } from "@/lib/recent-chats-store";
 
@@ -52,24 +54,20 @@ export function AppSidebar() {
     getLoadingTitleIds,
     getLoadingTitleIds,
   );
+  const hasMore = useSyncExternalStore(
+    subscribeRecentChats,
+    hasMoreRecentChats,
+    () => false,
+  );
+  const loadingMore = useSyncExternalStore(
+    subscribeRecentChats,
+    isLoadingMoreRecentChats,
+    () => false,
+  );
 
-  // Seed the store once from the server.
+  // Seed the store once from the server (guarded against duplicate fetches).
   useEffect(() => {
-    if (isRecentChatsLoaded()) return;
-    let active = true;
-    (async () => {
-      try {
-        const response = await listRecentChats();
-        if (active && response.success) setRecentChats(response.data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        if (active) markRecentChatsLoaded();
-      }
-    })();
-    return () => {
-      active = false;
-    };
+    seedRecentChats();
   }, []);
 
   return (
@@ -157,20 +155,38 @@ export function AppSidebar() {
                 No recent chats yet.
               </p>
             ) : (
-              recentChats.slice(0, 5).map((chat) => (
-                <SidebarMenuItem key={chat.id}>
-                  <SidebarMenuButton asChild tooltip={chat.title ?? "Untitled"}>
-                    <Link href={`/documents/${chat.document_id}?session=${chat.id}`}>
-                      <MessageSquare />
-                      {loadingTitleIds.has(chat.id) ? (
-                        <Skeleton className="h-4 w-full rounded-sm group-data-[collapsible=icon]:hidden" />
+              <>
+                {recentChats.map((chat) => (
+                  <SidebarMenuItem key={chat.uuid}>
+                    <SidebarMenuButton asChild tooltip={chat.title ?? "Untitled"}>
+                      <Link href={`/documents/${chat.document_uuid}?session=${chat.uuid}`}>
+                        <MessageSquare />
+                        {loadingTitleIds.has(chat.uuid) ? (
+                          <Skeleton className="h-4 w-full rounded-sm group-data-[collapsible=icon]:hidden" />
+                        ) : (
+                          <span className="truncate">{chat.title ?? "Untitled"}</span>
+                        )}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+                {hasMore && (
+                  <SidebarMenuItem className="group-data-[collapsible=icon]:hidden">
+                    <SidebarMenuButton
+                      onClick={() => loadMoreRecentChats()}
+                      disabled={loadingMore}
+                      className="justify-center text-xs text-muted-foreground hover:text-foreground"
+                    >
+                      {loadingMore ? (
+                        <Spinner className="size-3.5" />
                       ) : (
-                        <span className="truncate">{chat.title ?? "Untitled"}</span>
+                        <ChevronDown className="size-3.5" />
                       )}
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))
+                      <span>{loadingMore ? "Loading…" : "Load more"}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )}
+              </>
             )}
           </SidebarMenu>
         </SidebarGroup>

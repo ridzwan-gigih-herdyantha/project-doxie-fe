@@ -6,8 +6,8 @@ import { api } from "@/lib/api/client";
 import { toErrorResult } from "@/lib/api/errors";
 
 export interface dataDocument {
-    id: number;
-    user_id: number;
+    uuid: string;
+    user_id: string;
     title: string;
     file_name: string;
     file_path: string;

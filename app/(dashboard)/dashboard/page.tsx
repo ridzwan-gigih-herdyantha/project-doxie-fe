@@ -65,7 +65,7 @@ export default async function DashboardPage() {
 
       <div className="mt-2 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {documents.slice(0, 3).map((doc) => (
-          <DocumentCard key={doc.id} doc={doc} />
+          <DocumentCard key={doc.uuid} doc={doc} />
         ))}
         <UploadDocumentCard />
       </div>

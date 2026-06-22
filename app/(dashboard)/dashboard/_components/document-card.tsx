@@ -16,7 +16,7 @@ import { DeleteDocumentButton } from "./delete-document-button";
 
 export default function DocumentCard({
   doc,
-  href = `/documents/${doc.id}`,
+  href = `/documents/${doc.uuid}`,
   deletable = false,
 }: {
   doc: dataDocument;
@@ -24,34 +24,41 @@ export default function DocumentCard({
   deletable?: boolean;
 }) {
   const isReady = doc.status === "ready";
+  const canOpen = doc.uuid != null;
   const router = useRouter();
   const [opening, setOpening] = useState(false);
 
   const openChat = async () => {
+    // Never send a request with a missing id (would 404 with a raw backend leak).
+    if (!canOpen) {
+      toast.error("This document isn't available yet. Please refresh and try again.");
+      return;
+    }
+
     setOpening(true);
     const toastId = toast.loading("Opening chat...");
     try {
       toast.loading("Fetching chat sessions...", { id: toastId });
-      const list = await listSessions(doc.id);
+      const list = await listSessions(doc.uuid);
       if (!list.success) {
         toast.error(list.message, { id: toastId });
         return;
       }
 
-      let sessionId = list.data[0]?.id;
+      let sessionId = list.data[0]?.uuid;
 
       if (sessionId === undefined) {
         toast.loading("Creating a new session...", { id: toastId });
-        const created = await createSession(doc.id);
+        const created = await createSession(doc.uuid);
         if (!created.success) {
           toast.error(created.message, { id: toastId });
           return;
         }
-        sessionId = created.data.id;
+        sessionId = created.data.uuid;
       }
 
       toast.success("Chat ready. Redirecting...", { id: toastId });
-      router.push(`/documents/${doc.id}?session=${sessionId}`);
+      router.push(`/documents/${doc.uuid}?session=${sessionId}`);
     } catch (error) {
       console.error(error);
       toast.error("Couldn't open the chat. Please try again.", { id: toastId });
@@ -84,7 +91,7 @@ export default function DocumentCard({
       {/* Meta */}
       <div className="flex flex-col gap-0.5">
         <Link
-          href={href}
+          href={canOpen ? href : "#"}
           className="block truncate font-serif text-sm text-foreground hover:text-brand"
           title={doc.title}
         >
@@ -109,7 +116,9 @@ export default function DocumentCard({
             {opening ? <Spinner /> : <MessageSquare />}
             {opening ? "Opening…" : "Open chat"}
           </Button>
-          {deletable && <DeleteDocumentButton id={doc.id} title={doc.title} />}
+          {deletable && canOpen && (
+            <DeleteDocumentButton id={doc.uuid} title={doc.title} />
+          )}
         </div>
       ) : (
         <Button disabled variant="secondary" className="w-full">
