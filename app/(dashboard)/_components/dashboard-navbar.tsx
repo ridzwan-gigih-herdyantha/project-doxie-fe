@@ -15,17 +15,19 @@ export function DashboardNavbar({ user }: { user: SessionUser | null }) {
   const Actions = section.Actions;
 
   return (
-    <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center gap-3 border-b border-border bg-sidebar px-4">
-      <SidebarTrigger className="-ml-1"/>
-      <Separator orientation="vertical" className="mr-1 data-[orientation=vertical]:h-full" />
-      {/* <h1 className="text-sm font-semibold text-foreground">{section.title}</h1> */}
+    <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center gap-2 border-b border-border bg-sidebar px-3 sm:px-4">
+      <SidebarTrigger className="-ml-1 shrink-0" />
+      <Separator
+        orientation="vertical"
+        className="mr-1 shrink-0 data-[orientation=vertical]:h-full"
+      />
 
-      <div className="flex w-full items-center">
+      <div className="flex min-w-0 flex-1 items-center">
         {Actions ? <Actions /> : null}
-        <div className="ml-auto flex items-center">
-          <NotificationBell className="mx-2"/>
-          <AvatarUser user={user} />
-        </div>
+      </div>
+      <div className="flex shrink-0 items-center gap-1">
+        <NotificationBell />
+        <AvatarUser user={user} />
       </div>
     </header>
   );

@@ -99,11 +99,11 @@ export default function ExportButton() {
       <DropdownMenuTrigger asChild>
         <Button
           disabled={isLoading || !hasMessages}
-          className="bg-gray-800 text-foreground hover:bg-gray-900 items-center py-4 px-2"
+          className="shrink-0 items-center bg-gray-800 px-2 py-4 text-foreground hover:bg-gray-900"
           aria-label="Export chat"
         >
           {isLoading ? <Spinner /> : <Download />}
-          <span className="ml-1">Export Chat</span>
+          <span className="ml-1 hidden sm:inline">Export Chat</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-32" align="end">

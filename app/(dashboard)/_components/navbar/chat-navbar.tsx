@@ -43,10 +43,10 @@ export function ChatNavbar() {
     }
 
     return (
-      <div className="flex w-full justify-between items-center gap-2 p-2">
-        <div className="flex w-full justify-start items-center gap-2">
+      <div className="flex w-full min-w-0 justify-between items-center gap-2 p-2">
+        <div className="flex min-w-0 justify-start items-center gap-2">
           {documentTitle && (
-            <div className="flex items-center">
+            <div className="hidden items-center md:flex">
               <div className="flex min-w-0 items-center gap-2">
                 <FileText className="h-5 w-5 shrink-0 text-brand" />
                 <h1
@@ -59,8 +59,8 @@ export function ChatNavbar() {
               <Separator orientation="vertical" className="mx-4" />
             </div>
           )}
-          <div className="flex gap-2 items-center py-1 pl-2 pr-1 rounded-xl border border-border bg-[#141B2B]">
-            <h1 className="text-sm font-semibold text-foreground">
+          <div className="flex shrink-0 gap-2 items-center py-1 pl-2 pr-1 rounded-xl border border-border bg-[#141B2B]">
+            <h1 className="hidden text-sm font-semibold text-foreground sm:block">
               Model
             </h1>
             <DropdownMenu onOpenChange={handleOpenChange}>
