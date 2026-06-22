@@ -88,13 +88,9 @@ export function AppSidebar() {
             <span className="text-sm text-left ml-4 font-light font-sans text-gray-400">Main Workspace</span>
           </SidebarMenuItem> */}
         </SidebarMenu>
-      </SidebarHeader>
-
-      <SidebarContent>
-        <SidebarGroup>
+        <SidebarMenu>
           <NewDocumentButton/>
-        </SidebarGroup>
-        <SidebarGroup>
+        </SidebarMenu>
           {/* <SidebarGroupLabel>Menu</SidebarGroupLabel> */}
           <SidebarMenu className="gap-1">
             {NAV_SECTIONS.map((section) => {
@@ -130,10 +126,13 @@ export function AppSidebar() {
               );
             })}
           </SidebarMenu>
-        </SidebarGroup>
+      </SidebarHeader>
+
+          <SidebarGroupLabel className="text-sm">Recent Chats</SidebarGroupLabel>
+      <SidebarContent>
+        
         {/* <SidebarSeparator/> */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-sm">Recent Chats</SidebarGroupLabel>
           <SidebarMenu className="gap-1">
             {!loaded ? (
               ["w-3/4", "w-1/2", "w-2/3", "w-4/5"].map((w, i) => (
