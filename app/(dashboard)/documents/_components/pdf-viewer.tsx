@@ -38,7 +38,7 @@ export function PdfViewer({ url, className }: { url: string; className?: string 
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
-    const update = () => setPageWidth(Math.min(el.clientWidth - 32, 820));
+    const update = () => setPageWidth(Math.min(el.clientWidth - 32, 720));
     update();
     const ro = new ResizeObserver(update);
     ro.observe(el);

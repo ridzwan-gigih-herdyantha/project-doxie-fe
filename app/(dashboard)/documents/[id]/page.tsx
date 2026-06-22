@@ -84,7 +84,7 @@ async function DocumentDetail({
       {/* Shares the title with the navbar (no refetch). */}
       <SetDocumentTitle title={doc.title} />
 
-      <div className="min-w-0 flex-1 overflow-y-auto px-6 pt-4 pb-2">
+      <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-6 pt-4 pb-2">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <h2
@@ -143,7 +143,7 @@ async function ChatPanel({
 
 function DetailSkeleton() {
   return (
-    <div className="min-w-0 flex-1 overflow-y-auto px-6 pt-4 pb-2">
+    <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-6 pt-4 pb-2">
       <div className="flex items-start justify-between gap-4">
         <div className="flex flex-col gap-2">
           <Skeleton className="h-6 w-64 max-w-full" />

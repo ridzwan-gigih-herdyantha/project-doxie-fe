@@ -183,7 +183,9 @@ export function DocumentSidebar({
               )}
             >
               {m.role === "user" ? (
-                <span className="whitespace-pre-wrap">{m.content}</span>
+                <span className="block min-w-0 whitespace-pre-wrap wrap-break-word">
+                  {m.content}
+                </span>
               ) : m.content ? (
                 <>
                   <Markdown>{m.content}</Markdown>
