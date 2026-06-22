@@ -35,6 +35,7 @@ export async function login(
 ): Promise<AuthFormState> {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
+  const remember = Boolean(formData.get("remember"));
   const values = { email };
 
   if (!email || !password) {
@@ -44,7 +45,7 @@ export async function login(
   try {
     const res = await api.post<AuthResponse>(
       "/auth/login",
-      { email, password },
+      { email, password, remember },
       { skipAuth: true },
     );
     await setToken(res.data?.token);
