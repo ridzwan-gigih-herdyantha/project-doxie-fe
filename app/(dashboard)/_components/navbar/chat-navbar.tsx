@@ -13,6 +13,12 @@ import {
 import { useState, useSyncExternalStore } from "react"
 import { ChevronDown, FileText } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import ExportButton from "../export-button";
 import {
   getDocumentTitle,
@@ -81,15 +87,32 @@ export function ChatNavbar() {
                     value={model}
                     onValueChange={setChatModel}
                   >
-                  {CHAT_MODELS.map((m) => (
+                  {CHAT_MODELS.map((m) => {
+                    const inactive = m.status === "inactive";
+                    const item = (
                       <DropdownMenuRadioItem
                         key={m.id}
                         value={m.id}
-                        className="capitalize"
+                        disabled={inactive}
+                        className={cn(
+                          "capitalize",
+                          inactive &&
+                            "data-disabled:pointer-events-auto! data-disabled:cursor-not-allowed",
+                        )}
                       >
                         {m.label}
                       </DropdownMenuRadioItem>
-                    ))}
+                    );
+                    if (!inactive) return item;
+                    return (
+                      <Tooltip key={m.id}>
+                        <TooltipTrigger asChild>{item}</TooltipTrigger>
+                        <TooltipContent side="right">
+                          Temporarily unavailable
+                        </TooltipContent>
+                      </Tooltip>
+                    );
+                  })}
                   </DropdownMenuRadioGroup>
                 </DropdownMenuGroup>
               </DropdownMenuContent>
