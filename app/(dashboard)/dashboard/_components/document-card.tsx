@@ -11,7 +11,6 @@ import { Card } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { humanTime } from "@/lib/human-time";
 import type { dataDocument } from "../../documents/action";
-import { createSession, listSessions } from "../../chats/action";
 import { DeleteDocumentButton } from "./delete-document-button";
 
 export default function DocumentCard({
@@ -28,43 +27,15 @@ export default function DocumentCard({
   const router = useRouter();
   const [opening, setOpening] = useState(false);
 
-  const openChat = async () => {
-    // Never send a request with a missing id (would 404 with a raw backend leak).
+  const openChat = () => {
+    // Never navigate with a missing id (would 404 with a raw backend leak).
     if (!canOpen) {
       toast.error("This document isn't available yet. Please refresh and try again.");
       return;
     }
-
+    // Just open the chat — a session is created lazily on the first message.
     setOpening(true);
-    const toastId = toast.loading("Opening chat...");
-    try {
-      toast.loading("Fetching chat sessions...", { id: toastId });
-      const list = await listSessions(doc.uuid);
-      if (!list.success) {
-        toast.error(list.message, { id: toastId });
-        return;
-      }
-
-      let sessionId = list.data[0]?.uuid;
-
-      if (sessionId === undefined) {
-        toast.loading("Creating a new session...", { id: toastId });
-        const created = await createSession(doc.uuid);
-        if (!created.success) {
-          toast.error(created.message, { id: toastId });
-          return;
-        }
-        sessionId = created.data.uuid;
-      }
-
-      toast.success("Chat ready. Redirecting...", { id: toastId });
-      router.push(`/documents/${doc.uuid}?session=${sessionId}`);
-    } catch (error) {
-      console.error(error);
-      toast.error("Couldn't open the chat. Please try again.", { id: toastId });
-    } finally {
-      setOpening(false);
-    }
+    router.push(`/documents/${doc.uuid}`);
   };
 
   return (

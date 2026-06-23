@@ -29,17 +29,22 @@ import { getChatModel } from "@/lib/chat-model-store";
 import { Spinner } from "@/components/ui/spinner";
 import { CopyButton } from "@/components/ui/copy-button";
 import { Markdown } from "./markdown";
+import { toast } from "sonner";
+
 import { setChatExport } from "@/lib/chat-export-store";
-import { refreshRecentChats } from "@/lib/recent-chats-store";
+import { addRecentChat, refreshRecentChats } from "@/lib/recent-chats-store";
+import { createSession } from "../../chats/action";
 
 export function DocumentSidebar({
+  documentId,
   documentTitle = "Document",
   fileUrl,
-  sessionId,
+  sessionId: initialSessionId,
   messages: initialMessages = [],
   initialQuestion,
   defaultOpen = true,
 }: {
+  documentId: string;
   documentTitle?: string;
   /** PDF URL — opens in a Sheet on mobile (where the inline viewer is hidden). */
   fileUrl?: string;
@@ -51,12 +56,39 @@ export function DocumentSidebar({
 }) {
   const [open, setOpen] = useState(defaultOpen);
   const [input, setInput] = useState("");
+  // Created lazily on the first message, not when the chat is merely opened.
+  const [sessionId, setSessionId] = useState(initialSessionId);
   const { messages, isStreaming, sendMessage } = useChat(initialMessages);
   const scrollRef = useRef<HTMLDivElement>(null);
   const autoSentRef = useRef(false);
+  const creatingRef = useRef(false);
   const wasStreamingRef = useRef(false);
   const atBottomRef = useRef(true);
   const [showScrollDown, setShowScrollDown] = useState(false);
+
+  // Ensure a session exists (create on demand), then return its id.
+  const ensureSession = async (): Promise<string | null> => {
+    if (sessionId) return sessionId;
+    if (creatingRef.current) return null;
+    creatingRef.current = true;
+    const res = await createSession(documentId);
+    creatingRef.current = false;
+    if (!res.success) {
+      toast.error(res.message);
+      return null;
+    }
+    const sid = res.data.uuid;
+    setSessionId(sid);
+    addRecentChat(res.data);
+    // Reflect the session in the URL without a navigation (avoids remount).
+    window.history.replaceState(null, "", `/documents/${documentId}?session=${sid}`);
+    return sid;
+  };
+
+  const send = async (question: string) => {
+    const sid = await ensureSession();
+    if (sid) sendMessage(sid, question, getChatModel());
+  };
 
   const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior });
@@ -85,11 +117,12 @@ export function DocumentSidebar({
   useEffect(() => {
     if (autoSentRef.current) return;
     const question = initialQuestion?.trim();
-    if (question && sessionId !== undefined && messages.length === 0) {
+    if (question && messages.length === 0) {
       autoSentRef.current = true;
-      sendMessage(sessionId, question, getChatModel());
+      send(question);
     }
-  }, [initialQuestion, sessionId, messages.length, sendMessage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialQuestion, messages.length]);
 
   // When a reply finishes streaming, the backend may have generated a session
   // title — refetch and sync the store so the sidebar's Recent Chats updates.
@@ -104,7 +137,7 @@ export function DocumentSidebar({
     return () => clearTimeout(timer);
   }, [isStreaming]);
 
-  const canSend = input.trim() !== "" && sessionId !== undefined && !isStreaming;
+  const canSend = input.trim() !== "" && !isStreaming;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Grow the textarea with its content, up to a few lines.
@@ -121,7 +154,7 @@ export function DocumentSidebar({
     const question = input.trim();
     setInput("");
     if (textareaRef.current) textareaRef.current.style.height = "auto";
-    sendMessage(sessionId!, question, getChatModel());
+    send(question);
   };
 
   // Enter sends; Shift+Enter inserts a newline.
@@ -282,12 +315,8 @@ export function DocumentSidebar({
           }}
           onKeyDown={handleKeyDown}
           rows={1}
-          placeholder={
-            sessionId === undefined
-              ? "No chat session for this document"
-              : "Ask about this document…"
-          }
-          disabled={sessionId === undefined || isStreaming}
+          placeholder="Ask about this document…"
+          disabled={isStreaming}
           className="max-h-32 min-h-8 flex-1 resize-none rounded-md border border-input bg-transparent px-2.5 py-1.5 text-sm leading-relaxed outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 dark:bg-input/30"
         />
         <Button

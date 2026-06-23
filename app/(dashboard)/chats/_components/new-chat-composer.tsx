@@ -15,9 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
-import { addRecentChat } from "@/lib/recent-chats-store";
 import type { dataDocument } from "../../documents/action";
-import { createSession } from "../action";
 import {
   Tooltip,
   TooltipContent,
@@ -34,33 +32,17 @@ export function NewChatComposer({ documents }: { documents: dataDocument[] }) {
   const canStart =
     hasDocuments && documentId !== "" && question.trim() !== "" && !creating;
 
-  const start = async () => {
+  const start = () => {
     if (!documentId) {
       toast.error("Choose a document to chat with first.");
       return;
     }
     if (!question.trim() || creating) return;
 
+    // The session is created on the first message (in the chat panel), not here.
     setCreating(true);
-    const toastId = toast.loading("Starting a new chat…");
-    try {
-      const result = await createSession(documentId);
-      if (!result.success) {
-        toast.error(result.message, { id: toastId });
-        return;
-      }
-      toast.success("Chat created.", { id: toastId });
-      addRecentChat(result.data);
-      const q = encodeURIComponent(question.trim());
-      router.push(
-        `/documents/${documentId}?session=${result.data.uuid}&q=${q}`,
-      );
-    } catch (error) {
-      console.error(error);
-      toast.error("Couldn't start the chat. Please try again.", { id: toastId });
-    } finally {
-      setCreating(false);
-    }
+    const q = encodeURIComponent(question.trim());
+    router.push(`/documents/${documentId}?q=${q}`);
   };
 
   return (

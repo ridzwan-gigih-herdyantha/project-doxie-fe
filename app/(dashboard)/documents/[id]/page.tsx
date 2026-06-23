@@ -9,7 +9,7 @@ import { DocumentSidebar } from "../_components/document_sidebar";
 import { SetDocumentTitle } from "../_components/set-document-title";
 import { PdfViewerClient } from "../_components/pdf-viewer-client";
 import { DesktopOnly } from "../_components/desktop-only";
-import { listChats, listSessions } from "../../chats/action";
+import { listChats } from "../../chats/action";
 
 type DocumentPromise = ReturnType<typeof getDocument>;
 type ChatPromise = ReturnType<typeof loadChat>;
@@ -21,21 +21,18 @@ function formatBytes(bytes: number): string {
   return `${(bytes / 1024 ** i).toFixed(i ? 1 : 0)} ${units[i]}`;
 }
 
-async function loadChat(documentId: string, session?: string) {
-  let sessionId = session || undefined;
+async function loadChat(session?: string) {
+  // Only load an existing conversation when one is explicitly addressed by
+  // `?session=`. Opening a document without it starts an empty chat — a session
+  // is created lazily on the first message (see DocumentSidebar).
+  if (!session) return { sessionId: undefined, messages: [] };
 
-  if (!sessionId) {
-    const sessions = await listSessions(documentId);
-    if (sessions.success) sessionId = sessions.data[0]?.uuid;
-  }
-  if (!sessionId) return { sessionId: undefined, messages: [] };
-
-  const chats = await listChats(sessionId);
+  const chats = await listChats(session);
   const messages = chats.success
     ? chats.data.map((m) => ({ id: m.uuid, role: m.role, content: m.content }))
     : [];
 
-  return { sessionId, messages };
+  return { sessionId: session, messages };
 }
 
 export default async function DocumentDetailPage({
@@ -49,7 +46,7 @@ export default async function DocumentDetailPage({
   const { session, q } = await searchParams;
 
   const documentPromise = getDocument(id);
-  const chatPromise = loadChat(id, session);
+  const chatPromise = loadChat(session);
 
   return (
     <div className="-m-6 flex h-[calc(100svh-3.5rem)] overflow-hidden">
@@ -137,6 +134,7 @@ async function ChatPanel({
       <SetDocumentTitle title={documentTitle} />
       <DocumentSidebar
         key={chat.sessionId ?? documentId}
+        documentId={documentId}
         documentTitle={documentTitle}
         fileUrl={fileUrl}
         sessionId={chat.sessionId}
