@@ -1,7 +1,8 @@
+// components/landing-navbar.tsx  ← Server Component (no "use client")
 import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
 import { DoxieLogo } from "@/components/doxie-logo";
+import { getToken } from "@/lib/auth/session";
 
 const NAV_LINKS = [
   { label: "Features", href: "#features" },
@@ -9,7 +10,10 @@ const NAV_LINKS = [
   { label: "FAQ", href: "#faq" },
 ];
 
-export function LandingNavbar() {
+export async function LandingNavbar() {
+  const token = await getToken();
+  const isLoggedIn = !!token;
+
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
@@ -22,7 +26,7 @@ export function LandingNavbar() {
 
         <nav className="hidden items-center gap-8 md:flex">
           {NAV_LINKS.map((l) => (
-            <a
+            <a       
               key={l.href}
               href={l.href}
               className="text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -32,18 +36,28 @@ export function LandingNavbar() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
-          <Button asChild variant="ghost" size="sm">
-            <Link href="/login">Sign in</Link>
-          </Button>
+        {isLoggedIn ? (
           <Button
             asChild
             size="sm"
             className="bg-brand text-brand-foreground hover:bg-brand/90"
           >
-            <Link href="/register">Get started</Link>
+            <Link href="/dashboard">Dashboard</Link>
           </Button>
-        </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/login">Sign in</Link>
+            </Button>
+            <Button
+              asChild
+              size="sm"
+              className="bg-brand text-brand-foreground hover:bg-brand/90"
+            >
+              <Link href="/register">Get started</Link>
+            </Button>
+          </div>
+        )}
       </div>
     </header>
   );
