@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState } from "react";
 
 import { login, type AuthFormState } from "@/app/(auth)/actions";
 import { AuthField } from "@/app/(auth)/_components/auth-field";
@@ -8,21 +8,11 @@ import { FormError } from "@/app/(auth)/_components/form-error";
 import { SubmitButton } from "@/app/(auth)/_components/submit-button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Mail } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 const initialState: AuthFormState = {};
 
 export function LoginForm() {
   const [state, formAction] = useActionState(login, initialState);
-  const router = useRouter();
-
-  useEffect(() => {    
-    if (state.success) {
-      toast.success("Signed in successfully!");
-      router.push("/dashboard");
-    }
-  }, [state.success, router]);
 
   return (
     <form action={formAction} className="flex flex-col gap-4" noValidate>

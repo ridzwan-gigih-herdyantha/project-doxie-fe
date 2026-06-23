@@ -19,12 +19,10 @@ export type UploadResult =
 
 
 export async function uploadDocumentFile(file: File): Promise<UploadResult> {
-  // Without this, the fetch becomes relative and hits Next (Server Action 1MB cap).
+  // Misconfig (missing base URL) — keep the message generic for users.
   if (!API_URL) {
-    return {
-      success: false,
-      message: "Upload isn't configured: set NEXT_PUBLIC_LARAVEL_API_URL and restart.",
-    };
+    console.error("uploadDocumentFile: NEXT_PUBLIC_LARAVEL_API_URL is not set.");
+    return { success: false, message: "Couldn't upload right now. Please try again." };
   }
 
   const formData = new FormData();

@@ -9,9 +9,12 @@ const MESSAGES: Record<string, { type: "info" | "error" | "success"; text: strin
     type: "info",
     text: "You're already signed in. Log out first to use a different account.",
   },
+  "signed-in": {
+    type: "success",
+    text: "Signed in successfully!",
+  },
 };
 
-/** Shows a one-off toast from a `?notice=` param (e.g. after a redirect), then strips it. */
 export function NoticeToaster() {
   const params = useSearchParams();
   const router = useRouter();

@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 export default async function LoginPage() {
   const token = await getToken();
   if (token) {
-    redirect("/dashboard?notice=already-authed");
+    redirect("/dashboard");
   }
 
   return (

@@ -1,5 +1,7 @@
 "use server";
 
+import { redirect } from "next/navigation";
+
 import { api } from "@/lib/api/client";
 import { ApiError } from "@/lib/api/errors";
 import { setToken, setUser } from "@/lib/auth/session";
@@ -59,7 +61,8 @@ export async function login(
     return { ...toAuthError(error), values };
   }
 
-  return { success: true };
+  // Redirect server-side (single navigation, no /login re-render flash).
+  redirect("/dashboard?notice=signed-in");
 }
 
 export async function register(
