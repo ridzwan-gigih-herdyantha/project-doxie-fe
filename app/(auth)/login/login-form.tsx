@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 
 import { login, type AuthFormState } from "@/app/(auth)/actions";
-import { AuthField } from "@/app/(auth)/_components/auth-field";
+import { AuthField, rule } from "@/app/(auth)/_components/auth-field";
 import { FormError } from "@/app/(auth)/_components/form-error";
 import { SubmitButton } from "@/app/(auth)/_components/submit-button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -25,6 +25,7 @@ export function LoginForm() {
         startIcon={Mail}
         autoComplete="email"
         required
+        rules={[rule.email]}
         defaultValue={state.values?.email}
         errors={state.fieldErrors?.email}
       />

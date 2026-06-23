@@ -1,11 +1,11 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { register, type AuthFormState } from "@/app/(auth)/actions";
-import { AuthField } from "@/app/(auth)/_components/auth-field";
+import { AuthField, rule } from "@/app/(auth)/_components/auth-field";
 import { FormError } from "@/app/(auth)/_components/form-error";
 import { SubmitButton } from "@/app/(auth)/_components/submit-button";
 
@@ -13,6 +13,7 @@ const initialState: AuthFormState = {};
 
 export function RegisterForm() {
   const [state, formAction] = useActionState(register, initialState);
+  const [password, setPassword] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -31,6 +32,8 @@ export function RegisterForm() {
         name="name"
         autoComplete="name"
         required
+        counterMax={255}
+        rules={[rule.max(255, "Name must be at most 255 characters.")]}
         defaultValue={state.values?.name}
         errors={state.fieldErrors?.name}
       />
@@ -41,6 +44,7 @@ export function RegisterForm() {
         type="email"
         autoComplete="email"
         required
+        rules={[rule.email]}
         defaultValue={state.values?.email}
         errors={state.fieldErrors?.email}
       />
@@ -51,6 +55,9 @@ export function RegisterForm() {
         type="password"
         autoComplete="new-password"
         required
+        hint="At least 8 characters"
+        rules={[rule.min(8, "At least 8 characters.")]}
+        onChange={(e) => setPassword(e.target.value)}
         errors={state.fieldErrors?.password}
       />
 
@@ -60,6 +67,7 @@ export function RegisterForm() {
         type="password"
         autoComplete="new-password"
         required
+        rules={[(v) => (v === password ? null : "Passwords don't match.")]}
         errors={state.fieldErrors?.password_confirmation}
       />
 
