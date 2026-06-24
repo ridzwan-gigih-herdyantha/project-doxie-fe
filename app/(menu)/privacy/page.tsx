@@ -34,11 +34,13 @@ export const metadata: Metadata = {
     "How Doxie collects, uses, stores, and protects your data — built on transparency and zero-knowledge security.",
 };
 
+// Top-nav links are the sections that live on THIS page.
 const PAGE_NAV: NavLink[] = [
   { label: "Home", href: "/" },
-  { label: "Features", href: "/#features" },
-  { label: "Pricing", href: "/#pricing" },
-  { label: "FAQ", href: "/#faq" },
+  { label: "Data Collection & Usage", href: "#data-collection" },
+  { label: "Storage", href: "#storage" },
+  { label: "User Rights", href: "#user-rights" },
+  { label: "DPO Contact", href: "#dpo" },
 ];
 
 const NAV: { href: string; label: string; icon: LucideIcon }[] = [
