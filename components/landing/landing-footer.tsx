@@ -31,7 +31,7 @@ export function LandingFooter() {
               {col.links.map((l) => (
                 <li key={l}>
                   <a
-                    href="#"
+                    href={ l.toLowerCase() }
                     className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                   >
                     {l}
