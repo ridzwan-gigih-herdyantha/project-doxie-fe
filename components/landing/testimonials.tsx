@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { ChevronLeft, ChevronRight, Quote, Star } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
@@ -10,6 +10,8 @@ import {
   CarouselItem,
   type CarouselApi,
 } from "@/components/ui/carousel";
+import { BrandSpotlightCard } from "@/components/landing/brand-spotlight-card";
+import { SectionEyebrow } from "@/components/landing/section-eyebrow";
 
 const TESTIMONIALS = [
   {
@@ -50,6 +52,16 @@ const TESTIMONIALS = [
   },
 ];
 
+function initials(name: string): string {
+  return name
+    .replace(/^(Dr|Mr|Ms|Mrs)\.?\s+/i, "")
+    .split(" ")
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase();
+}
+
 export function Testimonials() {
   const [api, setApi] = useState<CarouselApi>();
   const [canPrev, setCanPrev] = useState(false);
@@ -72,10 +84,13 @@ export function Testimonials() {
 
   return (
     <section className="border-t border-border/60 bg-[#0A1019]">
-      <div className="mx-auto max-w-6xl px-6 py-20">
+      <div className="mx-auto max-w-6xl px-6 py-24">
         <div className="mb-10 flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight">Loved by experts</h2>
+            <SectionEyebrow className="ml-0">Testimonials</SectionEyebrow>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Loved by experts
+            </h2>
             <p className="mt-2 text-sm text-muted-foreground">
               Used by researchers at top universities and legal firms globally.
             </p>
@@ -86,7 +101,7 @@ export function Testimonials() {
               aria-label="Previous"
               onClick={() => api?.scrollPrev()}
               disabled={!canPrev}
-              className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+              className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-brand/40 hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
             >
               <ChevronLeft className="size-4" />
             </button>
@@ -95,7 +110,7 @@ export function Testimonials() {
               aria-label="Next"
               onClick={() => api?.scrollNext()}
               disabled={!canNext}
-              className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+              className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-brand/40 hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
             >
               <ChevronRight className="size-4" />
             </button>
@@ -105,30 +120,32 @@ export function Testimonials() {
         <Carousel setApi={setApi} opts={{ align: "start" }} className="w-full">
           <CarouselContent className="-ml-4">
             {TESTIMONIALS.map((t) => (
-              <CarouselItem
-                key={t.name}
-                className="pl-4 md:basis-1/2 lg:basis-1/3"
-              >
-                <figure className="flex h-full flex-col gap-4 rounded-xl border border-border bg-card p-6 ring-1 ring-foreground/5">
-                  <div className="flex gap-0.5 text-brand">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} className="size-4 fill-current" />
-                    ))}
+              <CarouselItem key={t.name} className="pl-4 md:basis-1/2 lg:basis-1/3">
+                <BrandSpotlightCard className="flex h-full flex-col gap-4 rounded-2xl p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex gap-0.5 text-brand">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star key={i} className="size-4 fill-current" />
+                      ))}
+                    </div>
+                    <Quote className="size-7 text-brand/25" />
                   </div>
-                  <blockquote className="text-sm italic text-muted-foreground">
+                  <blockquote className="text-sm leading-relaxed text-foreground/90">
                     “{t.quote}”
                   </blockquote>
-                  <figcaption className="mt-auto flex items-center gap-3">
+                  <figcaption className="mt-auto flex items-center gap-3 border-t border-border/60 pt-4">
                     <Avatar size="default">
-                      <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                      <AvatarFallback>DX</AvatarFallback>
+                      <AvatarImage src="https://github.com/shadcn.png" />
+                      <AvatarFallback className="bg-brand text-xs font-semibold text-brand-foreground">
+                        {initials(t.name)}
+                      </AvatarFallback>
                     </Avatar>
                     <div>
                       <p className="text-sm font-semibold">{t.name}</p>
                       <p className="text-xs text-muted-foreground">{t.role}</p>
                     </div>
                   </figcaption>
-                </figure>
+                </BrandSpotlightCard>
               </CarouselItem>
             ))}
           </CarouselContent>

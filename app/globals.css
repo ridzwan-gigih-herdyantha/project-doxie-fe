@@ -165,6 +165,48 @@ textarea:-webkit-autofill {
   transition: background-color 9999s ease-out 0s;
 }
 
+/* React Bits — StarBorder animated border (Tailwind v4: keyframes live in CSS). */
+@keyframes star-movement-bottom {
+  0% {
+    transform: translate(0%, 0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-100%, 0%);
+    opacity: 0;
+  }
+}
+@keyframes star-movement-top {
+  0% {
+    transform: translate(0%, 0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(100%, 0%);
+    opacity: 0;
+  }
+}
+.animate-star-movement-bottom {
+  animation: star-movement-bottom linear infinite alternate;
+}
+.animate-star-movement-top {
+  animation: star-movement-top linear infinite alternate;
+}
+
+/* Slow drift used by the ambient gradient blobs on the landing page. */
+@keyframes blob-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -24px, 0) scale(1.08);
+  }
+}
+.animate-blob-drift {
+  animation: blob-drift 14s ease-in-out infinite;
+}
+
 /* Themed scrollbars — thin, rounded, subtle; match the dark UI. */
 * {
   scrollbar-width: thin;
