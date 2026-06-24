@@ -22,7 +22,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { LandingNavbar } from "@/components/landing/landing-navbar";
+import {
+  LandingNavbar,
+  type NavLink,
+} from "@/components/landing/landing-navbar";
 import { LandingFooter } from "@/components/landing/landing-footer";
 
 export const metadata: Metadata = {
@@ -31,13 +34,20 @@ export const metadata: Metadata = {
     "How Doxie collects, uses, stores, and protects your data — built on transparency and zero-knowledge security.",
 };
 
-const NAV: { id: string; label: string; icon: LucideIcon }[] = [
-  { id: "data-collection", label: "Data Collection", icon: Database },
-  { id: "data-usage", label: "Usage & Models", icon: Activity },
-  { id: "storage", label: "Storage & Encryption", icon: Lock },
-  { id: "sharing", label: "Third-party Sharing", icon: Share2 },
-  { id: "user-rights", label: "User Rights", icon: Scale },
-  { id: "dpo", label: "DPO Contact", icon: MapPin },
+const PAGE_NAV: NavLink[] = [
+  { label: "Home", href: "/" },
+  { label: "Features", href: "/#features" },
+  { label: "Pricing", href: "/#pricing" },
+  { label: "FAQ", href: "/#faq" },
+];
+
+const NAV: { href: string; label: string; icon: LucideIcon }[] = [
+  { href: "data-collection", label: "Data Collection", icon: Database },
+  { href: "data-usage", label: "Usage & Models", icon: Activity },
+  { href: "storage", label: "Storage & Encryption", icon: Lock },
+  { href: "sharing", label: "Third-party Sharing", icon: Share2 },
+  { href: "user-rights", label: "User Rights", icon: Scale },
+  { href: "dpo", label: "DPO Contact", icon: MapPin },
 ];
 
 const COLLECTION = [
@@ -144,7 +154,7 @@ function StatusBadge({ children }: { children: React.ReactNode }) {
 export default function PrivacyPolicyPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <LandingNavbar />
+      <LandingNavbar navLinks={PAGE_NAV} />
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-16 lg:py-20">
         {/* Header */}
@@ -169,12 +179,12 @@ export default function PrivacyPolicyPage() {
             <nav className="flex flex-col gap-2">
               {NAV.map((item) => (
                 <Button
-                  key={item.id}
+                  key={item.href}
                   asChild
                   variant="ghost_brand"
                   className="rounded-sm w-full justify-start gap-2.5 bg-brand/10 font-mono text-sm font-medium text-brand ring-1 ring-brand/15 hover:bg-brand/15 hover:text-brand"
                 >
-                  <a href={`#${item.id}`}>
+                  <a href={`#${item.href}`}>
                     <item.icon className="size-4" />
                     {item.label}
                   </a>

@@ -4,14 +4,24 @@ import { Button } from "@/components/ui/button";
 import { DoxieLogo } from "@/components/doxie-logo";
 import { getToken } from "@/lib/auth/session";
 
-const NAV_LINKS = [
+export interface NavLink {
+  label: string;
+  href: string;
+}
+
+interface LandingNavbarProps {
+  navLinks?: NavLink[];
+}
+
+/** Home-page links. Each (menu) page can pass its own `navLinks` instead. */
+export const DEFAULT_NAV_LINKS: NavLink[] = [
   { label: "How it works", href: "#how-it-works" },
   { label: "Features", href: "#features" },
   { label: "Pricing", href: "#pricing" },
   { label: "FAQ", href: "#faq" },
 ];
 
-export async function LandingNavbar() {
+export async function LandingNavbar({ navLinks = DEFAULT_NAV_LINKS }: LandingNavbarProps) {
   const token = await getToken();
   const isLoggedIn = !!token;
 
@@ -26,14 +36,14 @@ export async function LandingNavbar() {
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
-          {NAV_LINKS.map((l) => (
-            <a       
+          {navLinks.map((l) => (
+            <Link
               key={l.href}
               href={l.href}
               className="text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               {l.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
