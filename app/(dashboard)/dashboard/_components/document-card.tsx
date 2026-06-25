@@ -47,7 +47,7 @@ export default function DocumentCard({
             <span className="absolute right-2 top-2 rounded-md bg-brand/20 px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-wide text-brand">
               Ready
             </span>
-            <FileText className="size-10 text-brand/80" />
+            <FileText className="size-10 text-brand opacity-80" />
           </>
         ) : (
           <div className="flex flex-col items-center gap-2 text-muted-foreground">
