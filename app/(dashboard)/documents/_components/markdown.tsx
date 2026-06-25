@@ -2,9 +2,67 @@
 
 import { useRef } from "react";
 import ReactMarkdown from "react-markdown";
+import type { Root, Element, Text, ElementContent } from "hast";
 
 import { cn } from "@/lib/utils";
 import { CopyButton } from "@/components/ui/copy-button";
+import { goToPdfPage, tokenizeCitations } from "@/lib/pdf-citation";
+
+// Don't turn citations into chips inside these elements (code/links).
+const SKIP_TAGS = new Set(["code", "pre", "a"]);
+
+/**
+ * Rehype plugin: replace page-citation tokens (e.g. "[p. 12]") in prose text
+ * nodes with a <span data-citation-page="12"> that we render as a clickable chip.
+ */
+function rehypeCitations() {
+  const walk = (node: Root | Element, skip: boolean) => {
+    const children = node.children as ElementContent[];
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i];
+      if (child.type === "text" && !skip) {
+        const segments = tokenizeCitations((child as Text).value);
+        if (segments.length === 1 && segments[0].type === "text") continue;
+
+        const replacement: ElementContent[] = segments.map((seg) =>
+          seg.type === "text"
+            ? { type: "text", value: seg.value }
+            : {
+                type: "element",
+                tagName: "span",
+                properties: { dataCitationPage: String(seg.page) },
+                children: [{ type: "text", value: seg.label }],
+              },
+        );
+        children.splice(i, 1, ...replacement);
+        i += replacement.length - 1;
+      } else if (child.type === "element") {
+        walk(child, skip || SKIP_TAGS.has(child.tagName));
+      }
+    }
+  };
+  return (tree: Root) => walk(tree, false);
+}
+
+/** Inline, clickable citation that scrolls the PDF viewer to the page. */
+function CitationChip({
+  page,
+  children,
+}: {
+  page: number;
+  children?: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={() => goToPdfPage(page)}
+      title={`Jump to page ${page}`}
+      className="mx-0.5 inline-flex items-baseline rounded-md border border-brand/30 bg-brand/10 px-1.5 py-0.5 align-baseline text-xs font-medium text-brand transition-colors hover:bg-brand/20"
+    >
+      {children}
+    </button>
+  );
+}
 
 /**
  * Renders an assistant message as markdown, styled for the dark chat bubble.
@@ -37,9 +95,27 @@ export function Markdown({
         className,
       )}
     >
-      <ReactMarkdown components={{ pre: CodeBlock }}>{children}</ReactMarkdown>
+      <ReactMarkdown
+        rehypePlugins={[rehypeCitations]}
+        components={{ pre: CodeBlock, span: CitationSpan }}
+      >
+        {children}
+      </ReactMarkdown>
     </div>
   );
+}
+
+/** Renders the citation chip for our injected spans; a plain span otherwise. */
+function CitationSpan({
+  node,
+  children,
+  ...props
+}: React.ComponentProps<"span"> & { node?: Element }) {
+  const page = node?.properties?.dataCitationPage;
+  if (page != null) {
+    return <CitationChip page={Number(page)}>{children}</CitationChip>;
+  }
+  return <span {...props}>{children}</span>;
 }
 
 /** A code block with a hover copy button (copies the rendered text). */

@@ -5,6 +5,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 import { Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { onPdfGoto } from "@/lib/pdf-citation";
 
 // Self-hosted worker (copied to /public). Re-copy after upgrading pdfjs-dist:
 //   cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/pdf.worker.min.mjs
@@ -27,12 +28,53 @@ function Status({ icon, text }: { icon?: React.ReactNode; text: string }) {
  * Text/annotation layers are off (render-only, per the design). Must be loaded
  * client-side only — see `pdf-viewer-client.tsx`.
  */
-export function PdfViewer({ url, className }: { url: string; className?: string }) {
+export function PdfViewer({
+  url,
+  className,
+  initialPage,
+}: {
+  url: string;
+  className?: string;
+  /** Scroll to this page once the PDF has loaded (used when opened from a citation). */
+  initialPage?: number;
+}) {
   const [numPages, setNumPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageWidth, setPageWidth] = useState<number>();
+  const [flashPage, setFlashPage] = useState<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const pageEls = useRef<Map<number, HTMLDivElement>>(new Map());
+
+  // Page-cited answers: scroll to (and briefly highlight) a clicked citation.
+  useEffect(() => {
+    return onPdfGoto((page) => {
+      const el = pageEls.current.get(page);
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      setFlashPage(page);
+      window.setTimeout(
+        () => setFlashPage((p) => (p === page ? null : p)),
+        2000,
+      );
+    });
+  }, []);
+
+  // When opened from a citation (e.g. the mobile sheet mounts late), jump to the
+  // requested page as soon as the document has rendered its page wrappers.
+  useEffect(() => {
+    if (!initialPage || !numPages) return;
+    const t = window.setTimeout(() => {
+      const el = pageEls.current.get(initialPage);
+      if (!el) return;
+      el.scrollIntoView({ behavior: "auto", block: "start" });
+      setFlashPage(initialPage);
+      window.setTimeout(
+        () => setFlashPage((p) => (p === initialPage ? null : p)),
+        2000,
+      );
+    }, 60);
+    return () => window.clearTimeout(t);
+  }, [initialPage, numPages]);
 
   // Fit each page to the column width (capped for readability).
   useEffect(() => {
@@ -102,7 +144,10 @@ export function PdfViewer({ url, className }: { url: string; className?: string 
                   if (node) pageEls.current.set(n, node);
                   else pageEls.current.delete(n);
                 }}
-                className="overflow-hidden rounded-lg bg-white shadow-lg shadow-black/40 ring-1 ring-foreground/10"
+                className={cn(
+                  "scroll-mt-4 overflow-hidden rounded-lg bg-white shadow-lg shadow-black/40 ring-1 ring-foreground/10 transition-all duration-500",
+                  flashPage === n && "ring-2 ring-brand ring-offset-2 ring-offset-background",
+                )}
               >
                 <Page
                   pageNumber={n}

@@ -7,6 +7,7 @@ import {
   MessageSquare,
   PanelRightClose,
   Send,
+  X,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -16,19 +17,13 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { PdfViewerClient } from "./pdf-viewer-client";
 import { useChat, type ChatMessage } from "@/hooks/use-chat";
 import { getChatModel } from "@/lib/chat-model-store";
 import { Spinner } from "@/components/ui/spinner";
 import { CopyButton } from "@/components/ui/copy-button";
 import { Markdown } from "./markdown";
+import { parseCitations, goToPdfPage, onPdfGoto } from "@/lib/pdf-citation";
 import { toast } from "sonner";
 
 import { setChatExport } from "@/lib/chat-export-store";
@@ -56,6 +51,11 @@ export function DocumentSidebar({
 }) {
   const [open, setOpen] = useState(defaultOpen);
   const [input, setInput] = useState("");
+  // Mobile: the PDF lives in a Sheet. A citation click opens it and scrolls.
+  const [pdfSheetOpen, setPdfSheetOpen] = useState(false);
+  const [pendingPage, setPendingPage] = useState<number>();
+  // Keep the PDF mounted after the first open so re-opening doesn't reload it.
+  const [pdfMounted, setPdfMounted] = useState(false);
   // Created lazily on the first message, not when the chat is merely opened.
   const [sessionId, setSessionId] = useState(initialSessionId);
   const { messages, isStreaming, sendMessage } = useChat(initialMessages);
@@ -106,6 +106,20 @@ export function DocumentSidebar({
   useEffect(() => {
     if (atBottomRef.current) scrollToBottom("auto");
   }, [messages]);
+
+  // On mobile the inline PDF column is hidden, so a citation click opens the
+  // PDF sheet and scrolls it to the page. On desktop the always-mounted viewer
+  // already handles the scroll, so leave the sheet alone there.
+  useEffect(() => {
+    if (!fileUrl) return;
+    return onPdfGoto((page) => {
+      const isMobile = window.matchMedia("(max-width: 767px)").matches;
+      if (!isMobile) return;
+      setPendingPage(page);
+      setPdfMounted(true);
+      setPdfSheetOpen(true);
+    });
+  }, [fileUrl]);
 
   // Expose the conversation to the navbar's Export button; clear on unmount.
   useEffect(() => {
@@ -197,31 +211,77 @@ export function DocumentSidebar({
         </div>
         <div className="flex items-center gap-1">
           {fileUrl && (
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="md:hidden"
-                  aria-label="View document"
-                >
-                  <FileText />
-                </Button>
-              </SheetTrigger>
-              <SheetContent
-                side="left"
-                className="flex w-[92%] flex-col gap-0 p-0 sm:max-w-md"
+            <>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden"
+                aria-label="View document"
+                onClick={() => {
+                  setPdfMounted(true);
+                  setPdfSheetOpen(true);
+                }}
               >
-                <SheetHeader className="shrink-0 border-b border-border px-4 py-3 text-left">
-                  <SheetTitle className="truncate max-h-6 pr-8 text-sm">
-                    {documentTitle}
-                  </SheetTitle>
-                </SheetHeader>
-                <div className="min-h-0 flex-1 p-3">
-                  <PdfViewerClient url={fileUrl} className="h-full" />
+                <FileText />
+              </Button>
+
+              {/* Mobile PDF drawer. Stays mounted (slides off-screen rather than
+                  unmounting) so the PDF never reloads, and uses native overflow
+                  scrolling instead of a Radix scroll-lock. */}
+              {pdfMounted && (
+                <div
+                  className={cn(
+                    "fixed inset-0 z-50 overflow-hidden md:hidden",
+                    pdfSheetOpen ? "" : "pointer-events-none",
+                  )}
+                  aria-hidden={!pdfSheetOpen}
+                >
+                  <div
+                    onClick={() => {
+                      setPdfSheetOpen(false);
+                      setPendingPage(undefined);
+                    }}
+                    className={cn(
+                      "absolute inset-0 bg-black/40 transition-opacity duration-300",
+                      pdfSheetOpen ? "opacity-100" : "opacity-0",
+                    )}
+                  />
+                  <div
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label={documentTitle}
+                    className={cn(
+                      "absolute inset-y-0 left-0 flex w-[92%] max-w-md flex-col bg-popover shadow-lg transition-transform duration-300 ease-in-out",
+                      pdfSheetOpen ? "translate-x-0" : "-translate-x-full",
+                    )}
+                  >
+                    <header className="flex shrink-0 items-center justify-between gap-2 border-b border-border px-4 py-3">
+                      <p className="truncate text-sm font-medium">
+                        {documentTitle}
+                      </p>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label="Close"
+                        onClick={() => {
+                          setPdfSheetOpen(false);
+                          setPendingPage(undefined);
+                        }}
+                      >
+                        <X className="size-4" />
+                      </Button>
+                    </header>
+                    <div className="min-h-0 flex-1 p-3">
+                      <PdfViewerClient
+                        url={fileUrl}
+                        className="h-full"
+                        initialPage={pendingPage}
+                      />
+                    </div>
+                  </div>
                 </div>
-              </SheetContent>
-            </Sheet>
+              )}
+            </>
           )}
           <Button
             variant="ghost"
@@ -269,6 +329,28 @@ export function DocumentSidebar({
               ) : m.content ? (
                 <>
                   <Markdown>{m.content}</Markdown>
+                  {(() => {
+                    const cites = parseCitations(m.content);
+                    if (cites.length === 0) return null;
+                    return (
+                      <div className="mt-2 flex flex-wrap items-center gap-1.5 border-t border-border/60 pt-2">
+                        <span className="text-[0.7rem] font-medium uppercase tracking-wide text-muted-foreground">
+                          Sources
+                        </span>
+                        {cites.map((c) => (
+                          <button
+                            key={c.page}
+                            type="button"
+                            onClick={() => goToPdfPage(c.page)}
+                            title={`Jump to page ${c.page}`}
+                            className="rounded-md border border-brand/30 bg-brand/10 px-1.5 py-0.5 text-xs font-medium text-brand transition-colors hover:bg-brand/20"
+                          >
+                            {c.label}
+                          </button>
+                        ))}
+                      </div>
+                    );
+                  })()}
                   <div className="mt-1 flex justify-end">
                     <CopyButton
                       value={m.content}

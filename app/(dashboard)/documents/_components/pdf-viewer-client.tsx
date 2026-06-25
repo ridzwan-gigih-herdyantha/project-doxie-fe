@@ -25,9 +25,13 @@ const PdfViewer = dynamic(
 export function PdfViewerClient({
   url,
   className,
+  initialPage,
 }: {
   url: string;
   className?: string;
+  initialPage?: number;
 }) {
-  return <PdfViewer url={url} className={cn(className)} />;
+  return (
+    <PdfViewer url={url} className={cn(className)} initialPage={initialPage} />
+  );
 }
