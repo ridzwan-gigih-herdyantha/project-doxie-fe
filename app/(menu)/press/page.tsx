@@ -1,12 +1,7 @@
 import type { Metadata } from "next";
-import {
-  BadgeCheck,
-  Download,
-  DownloadCloud,
-  ArrowRight,
-  Share2,
-  Rss,
-} from "lucide-react";
+import { readdir } from "node:fs/promises";
+import path from "node:path";
+import { BadgeCheck, Download, ArrowRight, Share2, Rss } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,6 +12,18 @@ import {
 } from "@/components/landing/landing-navbar";
 import { LandingFooter } from "@/components/landing/landing-footer";
 import { BrandPalette, CopyTextButton } from "./_components/press-kit";
+import { ScreenshotKit } from "./_components/screenshot-kit";
+
+/** List the bundled screenshot files served from /public-screenshots. */
+async function getScreenshots(): Promise<string[]> {
+  try {
+    const dir = path.join(process.cwd(), "public", "public-screenshots");
+    const files = await readdir(dir);
+    return files.filter((f) => /\.(png|jpe?g|webp|avif)$/i.test(f));
+  } catch {
+    return [];
+  }
+}
 
 export const metadata: Metadata = {
   title: "Press · DoxieAI",
@@ -61,35 +68,9 @@ function Wordmark({ light = false }: { light?: boolean }) {
   );
 }
 
-/** Decorative screenshot placeholder (no real asset shipped). */
-function ScreenshotTile() {
-  return (
-    <div className="relative aspect-video overflow-hidden rounded-lg border border-border bg-[#070E1D] ring-1 ring-foreground/5">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,color-mix(in_oklch,var(--brand)_14%,transparent),transparent_65%)]"
-      />
-      <div className="absolute inset-3 flex gap-2">
-        <div className="hidden w-1/4 flex-col gap-1.5 sm:flex">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-1.5 rounded-full bg-foreground/10" />
-          ))}
-        </div>
-        <div className="flex flex-1 items-end gap-1.5 rounded-md border border-border/60 bg-background/40 p-2">
-          {[50, 75, 40, 90, 60, 80, 55].map((h, i) => (
-            <div
-              key={i}
-              className="flex-1 rounded-sm bg-brand/40"
-              style={{ height: `${h}%` }}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
+export default async function PressPage() {
+  const screenshots = await getScreenshots();
 
-export default function PressPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <LandingNavbar navLinks={PAGE_NAV} />
@@ -159,27 +140,8 @@ export default function PressPage() {
         {/* Screenshot Kit */}
         <section id="screenshots" className="mt-6 scroll-mt-24">
           <Card className="ring-foreground/10">
-            <CardContent className="flex flex-col">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <h2 className="text-2xl font-bold tracking-tight">
-                    Screenshot Kit
-                  </h2>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    High-resolution previews of our core platform interface.
-                  </p>
-                </div>
-                <Button className="gap-2 bg-brand text-brand-foreground hover:bg-brand/90">
-                  <DownloadCloud className="size-4" />
-                  Download All Previews
-                </Button>
-              </div>
-
-              <div className="mt-6 grid gap-4 sm:grid-cols-3">
-                <ScreenshotTile />
-                <ScreenshotTile />
-                <ScreenshotTile />
-              </div>
+            <CardContent>
+              <ScreenshotKit files={screenshots} />
             </CardContent>
           </Card>
         </section>
@@ -213,7 +175,7 @@ export default function PressPage() {
               </p>
 
               <a
-                href="mailto:press@doxieai.com"
+                href="mailto: support@doxieai.ridzwangigih.com"
                 className="group mt-6 flex items-center justify-between rounded-xl border border-border bg-background/60 px-5 py-4 transition-colors hover:border-brand/40"
               >
                 <span>
@@ -221,7 +183,7 @@ export default function PressPage() {
                     Email Contact
                   </span>
                   <span className="mt-0.5 block text-sm font-medium">
-                    press@doxieai.com
+                     support@doxieai.ridzwangigih.com
                   </span>
                 </span>
                 <ArrowRight className="size-4 text-brand transition-transform group-hover:translate-x-0.5" />
