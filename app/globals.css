@@ -60,9 +60,9 @@ body {
 
 :root {
   /* Brand accent — retheme the whole app from these. strong = lighter, dark = deeper. */
-  --brand: #E3B341;
-  --brand-strong: #F2C94C;
-  --brand-dark: #B5841F;
+  --brand: #EDEDED;
+  --brand-strong: #f5f5f5;
+  --brand-dark: #727274;
   --brand-foreground: #0C1322;
   --background: #0C1322;
   --foreground: #DCE2F7;
