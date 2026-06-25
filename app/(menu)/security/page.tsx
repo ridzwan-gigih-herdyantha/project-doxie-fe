@@ -27,6 +27,7 @@ import {
 } from "@/components/landing/landing-navbar";
 import { LandingFooter } from "@/components/landing/landing-footer";
 import { BrandAurora } from "@/components/landing/brand-aurora";
+import { GlowShield } from "./_components/glow-shield";
 
 export const metadata: Metadata = {
   title: "Security · DoxieAI",
@@ -136,15 +137,7 @@ export default function SecurityPage() {
             </div>
 
             {/* Shield showcase */}
-            <div className="flex justify-center lg:justify-end">
-              <div className="relative flex aspect-square w-full max-w-xs items-center justify-center overflow-hidden rounded-3xl border border-border bg-card ring-1 ring-foreground/5">
-                <div
-                  aria-hidden
-                  className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,color-mix(in_oklch,var(--brand)_22%,transparent),transparent_65%)]"
-                />
-                <ShieldPlus className="relative size-28 text-brand drop-shadow-[0_0_30px_var(--brand)]" />
-              </div>
-            </div>
+            <GlowShield/>
           </div>
         </section>
 
