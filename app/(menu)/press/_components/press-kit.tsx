@@ -1,30 +1,64 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Check, Copy } from "lucide-react";
+import namer from "color-namer";
 
 import { cn } from "@/lib/utils";
 
-type Swatch = {
-  name: string;
-  hex: string;
-  /** Tailwind classes for the chip surface + text. */
+type Role = {
+  /** CSS var to read the live color from. */
+  cssVar: string;
+  /** Role suffix appended after the derived color name. */
+  role: string;
+  /** Tailwind classes for the chip surface + text (already brand-reactive). */
   className: string;
 };
 
-const SWATCHES: Swatch[] = [
-  { name: "Gold Primary", hex: "#FFD615", className: "bg-brand text-brand-foreground" },
+const ROLES: Role[] = [
+  { cssVar: "--brand", role: "Primary", className: "bg-brand text-brand-foreground" },
   {
-    name: "Deep Slate",
-    hex: "#0C1322",
+    cssVar: "--background",
+    role: "Base",
     className: "bg-background text-foreground ring-1 ring-border",
   },
   {
-    name: "Amber Dark",
-    hex: "#C9A800",
+    cssVar: "--brand-dark",
+    role: "Dark",
     className: "bg-brand-dark text-brand-foreground",
   },
 ];
+
+const toHex = (n: string) => Math.round(+n).toString(16).padStart(2, "0");
+
+/** Resolve a CSS var (hex/oklch/named) to an uppercase #RRGGBB string. */
+function resolveHex(cssVar: string): string {
+  const raw = getComputedStyle(document.documentElement)
+    .getPropertyValue(cssVar)
+    .trim();
+  const el = document.createElement("span");
+  el.style.color = raw || "#000000";
+  el.style.display = "none";
+  document.body.appendChild(el);
+  const resolved = getComputedStyle(el).color;
+  document.body.removeChild(el);
+  const m = resolved.match(/(\d+(?:\.\d+)?),\s*(\d+(?:\.\d+)?),\s*(\d+(?:\.\d+)?)/);
+  if (!m) return "#000000";
+  return `#${toHex(m[1])}${toHex(m[2])}${toHex(m[3])}`.toUpperCase();
+}
+
+/** Nearest human-readable color name for a hex (e.g. "Gold", "Mirage"). */
+function colorName(hex: string): string {
+  try {
+    return namer(hex, { pick: ["ntc"] }).ntc[0].name.replace(/\b\w/g, (c) =>
+      c.toUpperCase(),
+    );
+  } catch {
+    return "Color";
+  }
+}
+
+type Swatch = { name: string; hex: string; className: string };
 
 function useCopied() {
   const [copied, setCopied] = useState(false);
@@ -41,10 +75,36 @@ function useCopied() {
 }
 
 export function BrandPalette() {
+  const [swatches, setSwatches] = useState<Swatch[]>([]);
+
+  useEffect(() => {
+    const update = () =>
+      setSwatches(
+        ROLES.map((r) => {
+          const hex = resolveHex(r.cssVar);
+          return { name: `${colorName(hex)} ${r.role}`, hex, className: r.className };
+        }),
+      );
+    update();
+
+    // Runtime branding writes inline CSS vars on <html>; react to those.
+    const observer = new MutationObserver(update);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["style"],
+    });
+    window.addEventListener("storage", update);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("storage", update);
+    };
+  }, []);
+
   return (
     <div className="flex flex-col gap-3">
-      {SWATCHES.map((s) => (
-        <ColorChip key={s.hex} {...s} />
+      {swatches.map((s, i) => (
+        <ColorChip key={ROLES[i].cssVar} {...s} />
       ))}
       <p className="mt-2 text-xs italic leading-relaxed text-muted-foreground">
         Click color chips to copy HEX codes to your clipboard.
