@@ -115,14 +115,14 @@ export default function ExportButton() {
             {loadingFormat === "json" ? <Spinner className="mr-2" /> : null}
             JSON
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
+          {/* <DropdownMenuSeparator />
           <DropdownMenuItem
             disabled={isLoading}
             onSelect={() => handleExport("text")}
           >
             {loadingFormat === "text" ? <Spinner className="mr-2" /> : null}
             Plain Text
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
