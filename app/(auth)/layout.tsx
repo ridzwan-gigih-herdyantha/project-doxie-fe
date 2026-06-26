@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { DoxieLogo } from "@/components/doxie-logo";
+import { SystemStatus } from "@/app/(auth)/system-status";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -16,11 +17,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           {children}
         </Card>
         <div className="z-1 mt-8 text-center text-sm flex flex-row justify-between text-muted-foreground">
-          <p>All system operational</p>
+          <SystemStatus />
           <div className="flex items-center justify-center gap-4 text-xs">
             <a href="#" className="font-light hover:underline">Help</a>
             {/* <span className="text-xs">|</span> */}
-            <a href="#" className="font-light hover:underline">Privacy</a>
+            <a href="/privacy" className="font-light hover:underline">Privacy</a>
           </div>
         </div>
       </div>
