@@ -19,7 +19,6 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -27,6 +26,7 @@ import {
   type NavLink,
 } from "@/components/landing/landing-navbar";
 import { LandingFooter } from "@/components/landing/landing-footer";
+import { PrivacyToc } from "./_components/privacy-toc";
 
 export const metadata: Metadata = {
   title: "Privacy Policy · DoxieAI",
@@ -41,15 +41,6 @@ const PAGE_NAV: NavLink[] = [
   { label: "Storage", href: "#storage" },
   { label: "User Rights", href: "#user-rights" },
   { label: "DPO Contact", href: "#dpo" },
-];
-
-const NAV: { href: string; label: string; icon: LucideIcon }[] = [
-  { href: "data-collection", label: "Data Collection", icon: Database },
-  { href: "data-usage", label: "Usage & Models", icon: Activity },
-  { href: "storage", label: "Storage & Encryption", icon: Lock },
-  { href: "sharing", label: "Third-party Sharing", icon: Share2 },
-  { href: "user-rights", label: "User Rights", icon: Scale },
-  { href: "dpo", label: "DPO Contact", icon: MapPin },
 ];
 
 const COLLECTION = [
@@ -178,21 +169,7 @@ export default function PrivacyPolicyPage() {
         <div className="mt-12 grid gap-10 lg:grid-cols-[220px_1fr]">
           {/* Sticky table of contents */}
           <aside className="lg:sticky lg:top-24 lg:self-start">
-            <nav className="flex flex-col gap-2">
-              {NAV.map((item) => (
-                <Button
-                  key={item.href}
-                  asChild
-                  variant="ghost_brand"
-                  className="rounded-sm w-full justify-start gap-2.5 bg-brand/10 font-mono text-sm font-medium text-brand ring-1 ring-brand/15 hover:bg-brand/15 hover:text-brand"
-                >
-                  <a href={`#${item.href}`}>
-                    <item.icon className="size-4" />
-                    {item.label}
-                  </a>
-                </Button>
-              ))}
-            </nav>
+            <PrivacyToc />
           </aside>
 
           {/* Content */}
@@ -409,8 +386,8 @@ export default function PrivacyPolicyPage() {
 
             <p className="text-center text-xs text-muted-foreground">
               Looking for our terms?{" "}
-              <Link href="/" className="text-brand hover:underline">
-                Back to home
+              <Link href="/terms" className="text-brand hover:underline">
+                Terms of Service
               </Link>
             </p>
           </div>
