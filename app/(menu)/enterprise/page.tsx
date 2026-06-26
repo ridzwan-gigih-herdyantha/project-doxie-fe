@@ -246,10 +246,10 @@ export default function EnterprisePage() {
 
         {/* Request Demo */}
         <section id="demo" className="scroll-mt-20 mb-10">
-          <div className="relative">
+          <div className="relative overflow-clip">
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-0 bg-brand/7 transform -rotate-2 scale-110"
+              className="pointer-events-none absolute -inset-x-8 inset-y-6 -rotate-2 bg-brand/7"
             />
             <div className="relative mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-2 lg:items-center">
               <div>
