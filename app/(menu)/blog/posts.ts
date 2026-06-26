@@ -41,7 +41,7 @@ export const POSTS: Post[] = [
     title: "How Our RAG Pipeline Cites Every Answer",
     excerpt:
       "Retrieval-Augmented Generation (RAG) is the backbone of Doxie. Learn how we solved the citation problem by mapping semantic chunks back to original page coordinates in real-time.",
-    date: "Oct 12, 2024",
+    date: "Feb 12, 2026",
     readTime: "12 min read",
     author: { name: "Elena Vance", initials: "EV" },
     content: [
@@ -110,7 +110,7 @@ export const POSTS: Post[] = [
     title: "Automating Legal Review with Doxie API",
     excerpt:
       "A developer guide on setting up webhooks and automated risk scoring for incoming contracts using our Python SDK and REST API.",
-    date: "Oct 02, 2024",
+    date: "Jun 02, 2026",
     readTime: "15 min read",
     author: { name: "Priya Nair", initials: "PN" },
     content: [
@@ -152,7 +152,7 @@ export const POSTS: Post[] = [
     title: "New: Mobile OCR and Voice Search",
     excerpt:
       "Snap a photo of a physical document and chat with it immediately. Plus, our new voice interface makes hands-free research a reality.",
-    date: "Sep 30, 2024",
+    date: "Sep 30, 2025",
     readTime: "3 min read",
     author: { name: "Tom Becker", initials: "TB" },
     content: [
@@ -170,7 +170,7 @@ export const POSTS: Post[] = [
     title: "The Future of Multi-Modal Context",
     excerpt:
       "How we're pushing the boundaries of what's possible with 1M+ token context windows for enterprise data.",
-    date: "Oct 05, 2024",
+    date: "Oct 05, 2025",
     readTime: "10 min read",
     author: { name: "Elena Vance", initials: "EV" },
     content: [
@@ -196,7 +196,7 @@ export const POSTS: Post[] = [
     title: "Privacy First: SOC2 Compliance",
     excerpt:
       "Doxie is now SOC2 Type II compliant. Your document data is encrypted, siloed, and never used for training.",
-    date: "Sep 28, 2024",
+    date: "Sep 28, 2025",
     readTime: "4 min read",
     author: { name: "David Okafor", initials: "DO" },
     content: [

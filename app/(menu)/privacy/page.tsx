@@ -160,7 +160,7 @@ export default function PrivacyPolicyPage() {
             Privacy Policy
           </h1>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-            Last updated: October 24, 2023. At Doxie, we treat your documents with
+            Last updated: June 2026. At Doxie, we treat your documents with
             the same level of security we would our own. Our platform is built on
             transparency and non-compromised data integrity.
           </p>

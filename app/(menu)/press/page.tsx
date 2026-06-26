@@ -40,7 +40,7 @@ const PAGE_NAV: NavLink[] = [
 ];
 
 const BOILERPLATE =
-  "Founded in 2023, Doxie AI is a San Francisco-based technology company pioneering the future of technical knowledge management. By leveraging proprietary LLM architectures specifically tuned for engineering workflows, Doxie transforms fragmented data into structured, actionable documentation. Our mission is to eliminate the 'documentation debt' that stalls innovation in global enterprise teams.";
+  "Founded in 2026, Doxie AI is a San Francisco-based technology company pioneering the future of technical knowledge management. By leveraging proprietary LLM architectures specifically tuned for engineering workflows, Doxie transforms fragmented data into structured, actionable documentation. Our mission is to eliminate the 'documentation debt' that stalls innovation in global enterprise teams.";
 
 function Wordmark({ light = false }: { light?: boolean }) {
   return (
@@ -80,7 +80,7 @@ export default async function PressPage() {
         <header className="max-w-3xl">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-wide text-brand">
             <BadgeCheck className="size-3.5" />
-            Media Kit 2024
+            Media Kit 2026
           </span>
           <h1 className="mt-6 text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl">
             Everything you need to{" "}

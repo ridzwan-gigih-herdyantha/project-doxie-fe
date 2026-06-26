@@ -24,8 +24,8 @@ const PRO_FEATURES = [
 ];
 
 const INVOICES = [
-  { period: "Nov 2023", amount: "$0.00 (Free)" },
-  { period: "Oct 2023", amount: "$0.00 (Free)" },
+  { period: "Apr 2026", amount: "$0.00 (Free)" },
+  { period: "May 2026", amount: "$0.00 (Free)" },
 ];
 
 export function BillingTab({
