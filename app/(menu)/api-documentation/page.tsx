@@ -12,9 +12,6 @@ import {
   Info,
   CircleCheck,
   ChevronRight,
-  LayoutDashboard,
-  KeyRound,
-  Upload,
   HelpCircle,
   type LucideIcon,
 } from "lucide-react";
@@ -27,6 +24,7 @@ import {
   type NavLink,
 } from "@/components/landing/landing-navbar";
 import { SystemStatus } from "@/app/(auth)/system-status";
+import { DocsSidebarNav } from "./_components/docs-sidebar-nav";
 
 export const metadata: Metadata = {
   title: "API Docs · DoxieAI",
@@ -40,15 +38,6 @@ const PAGE_NAV: NavLink[] = [
   { label: "FAQ", href: "/#faq" },
   { label: "API Docs", href: "/api-documentation" },
 ];
-
-const SIDEBAR: { id: string; label: string; icon: LucideIcon; active?: boolean }[] =
-  [
-    { id: "introduction", label: "Introduction", icon: LayoutDashboard, active: true },
-    { id: "authentication", label: "Authentication", icon: KeyRound },
-    { id: "upload", label: "Upload", icon: Upload },
-    { id: "chat", label: "Chat", icon: MessageSquare },
-    { id: "sessions", label: "Sessions", icon: History },
-  ];
 
 const CURL = `curl https://api.doxie.ai/v1/chat \\
   -H "Authorization: Bearer $DOXIE_API_KEY" \\
@@ -124,23 +113,7 @@ export default function ApiDocsPage() {
             </div>
           </div>
 
-          <nav className="mt-4 flex flex-col gap-1">
-            {SIDEBAR.map((item) => (
-              <a
-                key={item.id}
-                href={`#${item.id}`}
-                className={cn(
-                  "flex items-center gap-2.5 rounded-md px-3 py-2 font-mono text-sm transition-colors",
-                  item.active
-                    ? "bg-brand text-brand-foreground"
-                    : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground",
-                )}
-              >
-                <item.icon className="size-4" />
-                {item.label}
-              </a>
-            ))}
-          </nav>
+          <DocsSidebarNav />
 
           <div className="mt-auto flex flex-col gap-1">
             <a
