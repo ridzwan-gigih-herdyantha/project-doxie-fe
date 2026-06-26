@@ -8,6 +8,11 @@ const COLUMNS = [
   { title: "Legal", links: ["Privacy", "Terms", "Security"] },
 ];
 
+function linkTo(l: string) {
+  if(l === "Pricing") return "/#pricing"
+  else if(l === "Features") return "/#features"
+  else return `/${l.toLowerCase()}`
+}
 export function LandingFooter() {
   return (
     <footer className="border-t border-border/60">
@@ -31,7 +36,7 @@ export function LandingFooter() {
               {col.links.map((l) => (
                 <li key={l}>
                   <a
-                    href={ l.toLowerCase() }
+                    href={linkTo(l)}
                     className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                   >
                     {l}

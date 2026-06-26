@@ -359,7 +359,7 @@ export default function PrivacyPolicyPage() {
 
                   <div className="grid gap-4 sm:grid-cols-2">
                     <a
-                      href="mailto:privacy@doxie.ai"
+                      href="mailto:support@doxieai.ridzwangigih.com"
                       className="flex items-center gap-3 rounded-xl border border-border bg-background/40 px-4 py-3 transition-colors hover:border-brand/40"
                     >
                       <div className="flex size-10 shrink-0 items-center justify-center rounded-lg text-brand">
@@ -367,7 +367,7 @@ export default function PrivacyPolicyPage() {
                       </div>
                       <div>
                         <p className="text-xs text-muted-foreground">Email</p>
-                        <p className="text-sm font-medium">privacy@doxie.ai</p>
+                        <p className="text-sm font-medium">support@doxieai.ridzwangigih.com</p>
                       </div>
                     </a>
                     <div className="flex items-center gap-3 rounded-xl border border-border bg-background/40 px-4 py-3">
