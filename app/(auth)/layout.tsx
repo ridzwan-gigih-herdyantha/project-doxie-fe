@@ -19,7 +19,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <div className="z-1 mt-8 text-center text-sm flex flex-row justify-between text-muted-foreground">
           <SystemStatus />
           <div className="flex items-center justify-center gap-4 text-xs">
-            <a href="#" className="font-light hover:underline">Help</a>
+            <a href="/help" className="font-light hover:underline">Help</a>
             {/* <span className="text-xs">|</span> */}
             <a href="/privacy" className="font-light hover:underline">Privacy</a>
           </div>

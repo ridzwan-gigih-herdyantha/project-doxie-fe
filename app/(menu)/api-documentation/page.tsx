@@ -16,7 +16,6 @@ import {
   KeyRound,
   Upload,
   HelpCircle,
-  Activity,
   type LucideIcon,
 } from "lucide-react";
 
@@ -27,6 +26,7 @@ import {
   LandingNavbar,
   type NavLink,
 } from "@/components/landing/landing-navbar";
+import { SystemStatus } from "@/app/(auth)/system-status";
 
 export const metadata: Metadata = {
   title: "API Docs · DoxieAI",
@@ -144,19 +144,13 @@ export default function ApiDocsPage() {
 
           <div className="mt-auto flex flex-col gap-1">
             <a
-              href="#"
+              href="/help"
               className="flex items-center gap-2.5 rounded-md px-3 py-2 font-mono text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               <HelpCircle className="size-4" />
               Help Center
             </a>
-            <a
-              href="#"
-              className="flex items-center gap-2.5 rounded-md px-3 py-2 font-mono text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <Activity className="size-4" />
-              API Status
-            </a>
+            <SystemStatus className="px-3 py-2 font-mono text-xs text-muted-foreground" />
           </div>
         </aside>
 

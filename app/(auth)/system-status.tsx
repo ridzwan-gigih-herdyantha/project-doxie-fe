@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 
 type Status = "loading" | "ok" | "down";
 
-/** Live backend health dot for the auth screens — green = all good, red = down. */
-export function SystemStatus() {
+/** Live backend health dot — green = all good, red = down. */
+export function SystemStatus({ className }: { className?: string }) {
   const [status, setStatus] = useState<Status>("loading");
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export function SystemStatus() {
         : "Checking status…";
 
   return (
-    <p className="flex items-center gap-2">
+    <p className={cn("flex items-center gap-2", className)}>
       <span className="relative flex size-2">
         {status === "ok" && (
           <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500 opacity-60" />
