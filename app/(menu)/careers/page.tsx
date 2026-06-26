@@ -146,7 +146,7 @@ export default function CareersPage() {
               >
                 <a href="mailto:support@doxieai.ridzwangigih.com">
                   Send CV to support@doxieai.ridzwangigih.com
-                  <AtSign className="size-4" />
+                  {/* <AtSign className="size-4" /> */}
                 </a>
               </Button>
             </div>
