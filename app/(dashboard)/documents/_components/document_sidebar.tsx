@@ -71,18 +71,29 @@ export function DocumentSidebar({
     if (sessionId) return sessionId;
     if (creatingRef.current) return null;
     creatingRef.current = true;
-    const res = await createSession(documentId);
-    creatingRef.current = false;
-    if (!res.success) {
-      toast.error(res.message);
-      return null;
+
+    // Staged feedback: one toast that updates loading → success / error.
+    const toastId = toast.loading("Creating a new chat session…");
+    try {
+      const res = await createSession(documentId);
+      if (!res.success) {
+        toast.error(res.message, { id: toastId });
+        return null;
+      }
+      const sid = res.data.uuid;
+      setSessionId(sid);
+      addRecentChat(res.data);
+      // Reflect the session in the URL without a navigation (avoids remount).
+      window.history.replaceState(
+        null,
+        "",
+        `/documents/${documentId}?session=${sid}`,
+      );
+      toast.success("Chat session created", { id: toastId });
+      return sid;
+    } finally {
+      creatingRef.current = false;
     }
-    const sid = res.data.uuid;
-    setSessionId(sid);
-    addRecentChat(res.data);
-    // Reflect the session in the URL without a navigation (avoids remount).
-    window.history.replaceState(null, "", `/documents/${documentId}?session=${sid}`);
-    return sid;
   };
 
   const send = async (question: string) => {
