@@ -11,6 +11,7 @@ const COLUMNS = [
 function linkTo(l: string) {
   if(l === "Pricing") return "/#pricing"
   else if(l === "Features") return "/#features"
+  else if(l === "API") return "/api-documentation"
   else return `/${l.toLowerCase()}`
 }
 export function LandingFooter() {
