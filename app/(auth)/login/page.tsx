@@ -7,11 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getToken } from "@/lib/auth/session";
+import { GoogleAuthButton } from "@/app/(auth)/google-auth-button";
 
 export const metadata: Metadata = {
   title: "Sign In",
@@ -28,17 +27,7 @@ export default async function LoginPage() {
       <CardHeader className="text-center">
         <CardTitle className="text-lg">Welcome Back</CardTitle>
         <CardDescription className="font-inter">Please enter your details to sign in.</CardDescription>
-        <Button type="submit" variant="outline" className="w-full my-4 rounded-sm dark:bg-[#3D4A42]/10 dark:border-[#3D4A42] hover:dark:bg-[#3D4A42]/30">
-          <Image
-            src="/logo/google-icon.svg"
-            alt="Google"
-            width={14}
-            height={14}
-            priority
-            unoptimized
-          />
-          Sign in with Google
-        </Button>
+        <GoogleAuthButton label="Sign in with Google" />
         <div className="flex items-center w-full gap-4">
           <Separator className="flex-1 bg-[#3D4A42]" />
           <span className="text-sm whitespace-nowrap text-muted-foreground">

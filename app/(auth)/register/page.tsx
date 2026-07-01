@@ -8,6 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { GoogleAuthButton } from "@/app/(auth)/google-auth-button";
 
 export const metadata: Metadata = {
   title: "Sign Up",
@@ -19,6 +21,14 @@ export default function RegisterPage() {
       <CardHeader className="text-center">
         <CardTitle className="text-lg">Create an account</CardTitle>
         <CardDescription>Complete the following details to register.</CardDescription>
+        <GoogleAuthButton label="Sign up with Google" />
+        <div className="flex items-center w-full gap-4">
+          <Separator className="flex-1 bg-[#3D4A42]" />
+          <span className="text-sm whitespace-nowrap text-muted-foreground">
+            or continue with email
+          </span>
+          <Separator className="flex-1 bg-[#3D4A42]" />
+        </div>
       </CardHeader>
 
       <CardContent>
