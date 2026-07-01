@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { serverEnv } from "@/lib/env";
 import { setToken, setUser, type SessionUser } from "@/lib/auth/session";
 
 export const dynamic = "force-dynamic";
@@ -11,13 +12,12 @@ export const dynamic = "force-dynamic";
  * `/auth/google/redirect`, Google bounces back to Laravel's callback, and
  * Laravel finally redirects the browser HERE with the issued token. Google
  * redirects to a *page*, not a JSON endpoint, so this has to be a Route Handler
- * that sets the httpOnly session cookie (same one used by email login) and then
- * forwards to the dashboard.
+ * that sets the httpOnly session cookie (same one used by email login), fetches
+ * the current user, and forwards to the dashboard.
  *
  * Expected redirect from Laravel:
  *   /auth/callback?token=<sanctum-token>
- *   &user=<base64-encoded JSON of {uuid,name,email,avatar_url}>   (optional)
- *   &error=<message>                                              (on failure)
+ *   &error=<message>            (on failure)
  */
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -30,25 +30,53 @@ export async function GET(req: Request) {
 
   await setToken(token);
 
-  // Optional user payload so Server Components can show the name/avatar without
-  // an extra round-trip (mirrors what email login stores).
-  const rawUser = url.searchParams.get("user");
-  if (rawUser) {
-    try {
-      const decoded = Buffer.from(rawUser, "base64").toString("utf8");
-      const u = JSON.parse(decoded) as Partial<SessionUser>;
-      if (u.uuid && u.name && u.email) {
-        await setUser({
-          uuid: u.uuid,
-          name: u.name,
-          email: u.email,
-          avatar_url: u.avatar_url ?? null,
-        });
-      }
-    } catch {
-      // Malformed user payload — ignore; the token alone is enough to sign in.
+  // Populate the user cookie so Server Components (navbar, and the realtime
+  // document-ready listener which is gated behind a user existing) work the same
+  // as email login. Fetch directly with the token to avoid relying on the
+  // just-set cookie being readable within this same request.
+  try {
+    const res = await fetch(`${serverEnv.laravelApiUrl}/auth/user`, {
+      headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
+      cache: "no-store",
+      signal: AbortSignal.timeout(5000),
+    });
+
+    if (res.ok) {
+      const json = (await res.json()) as Record<string, unknown>;
+      const user = extractUser(json);
+      if (user) await setUser(user);
     }
+  } catch {
+    // Best-effort — the token alone is enough to be signed in. If this fails,
+    // the user cookie stays empty (name/avatar + live notifications degrade),
+    // but the session is still valid.
   }
 
   return NextResponse.redirect(new URL("/dashboard?notice=signed-in", url.origin));
+}
+
+/** Pull the user object out of a few common Laravel response shapes. */
+function extractUser(json: Record<string, unknown>): SessionUser | null {
+  const data = json?.data as Record<string, unknown> | undefined;
+  const candidate =
+    (data?.user as Record<string, unknown> | undefined) ??
+    data ??
+    (json?.user as Record<string, unknown> | undefined) ??
+    json;
+
+  if (
+    candidate &&
+    typeof candidate.uuid === "string" &&
+    typeof candidate.name === "string" &&
+    typeof candidate.email === "string"
+  ) {
+    return {
+      uuid: candidate.uuid,
+      name: candidate.name,
+      email: candidate.email,
+      avatar_url:
+        typeof candidate.avatar_url === "string" ? candidate.avatar_url : null,
+    };
+  }
+  return null;
 }
