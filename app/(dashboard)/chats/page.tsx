@@ -1,8 +1,11 @@
+import type { Metadata } from "next";
 import { Sparkles } from "lucide-react";
 
 import { listDocuments } from "../documents/action";
 import { NewChatComposer } from "./_components/new-chat-composer";
 import { ChatsList } from "./_components/chats-list";
+
+export const metadata: Metadata = { title: "Chats" };
 
 export default async function ChatsPage() {
   const docsResult = await listDocuments();

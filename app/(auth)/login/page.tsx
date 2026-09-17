@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { pageMetadata } from "@/lib/seo";
+
 import { LoginForm } from "@/app/(auth)/login/login-form";
 import {
   CardContent,
@@ -12,9 +14,12 @@ import { redirect } from "next/navigation";
 import { getToken } from "@/lib/auth/session";
 import { GoogleAuthButton } from "@/app/(auth)/google-auth-button";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Sign In",
-};
+  description:
+    "Sign in to DoxieAI to chat with your PDF documents and get instant, page-cited answers.",
+  path: "/login",
+});
 
 export default async function LoginPage() {
   const token = await getToken();

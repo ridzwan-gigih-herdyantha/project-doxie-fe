@@ -12,6 +12,7 @@ import { LandingFooter } from "@/components/landing/landing-footer";
 import { BlogThumb } from "../_components/blog-thumb";
 import { BlogMarkdown } from "../_components/blog-markdown";
 import { POSTS, getPost } from "../posts";
+import { SITE, absoluteUrl, jsonLd, pageMetadata, toIsoDate } from "@/lib/seo";
 
 const PAGE_NAV: NavLink[] = [
   { label: "Features", href: "/#features" },
@@ -31,12 +32,21 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = getPost(slug);
-  if (!post) return { title: "Article not found · DoxieAI" };
-  return {
-    title: `${post.title} · DoxieAI Blog`,
+  if (!post) return { title: "Article not found", robots: { index: false } };
+  return pageMetadata({
+    title: post.title,
     description: post.excerpt,
-  };
+    path: `/blog/${post.slug}`,
+    type: "article",
+    openGraph: {
+      type: "article",
+      publishedTime: toIsoDate(post.date),
+      authors: [post.author.name],
+      section: post.category,
+    },
+  });
 }
+
 
 export default async function BlogPostPage({
   params,
@@ -49,8 +59,42 @@ export default async function BlogPostPage({
 
   const related = POSTS.filter((p) => p.slug !== post.slug).slice(0, 3);
 
+  const url = absoluteUrl(`/blog/${post.slug}`);
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      headline: post.title,
+      description: post.excerpt,
+      image: absoluteUrl(SITE.ogImage.url),
+      datePublished: toIsoDate(post.date),
+      articleSection: post.category,
+      author: { "@type": "Person", name: post.author.name },
+      publisher: {
+        "@type": "Organization",
+        name: SITE.name,
+        logo: { "@type": "ImageObject", url: absoluteUrl(SITE.logo) },
+      },
+      mainEntityOfPage: { "@type": "WebPage", "@id": url },
+      url,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+        { "@type": "ListItem", position: 2, name: "Blog", item: absoluteUrl("/blog") },
+        { "@type": "ListItem", position: 3, name: post.title, item: url },
+      ],
+    },
+  ];
+
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }}
+      />
       <LandingNavbar navLinks={PAGE_NAV} />
 
       <main className="flex-1">

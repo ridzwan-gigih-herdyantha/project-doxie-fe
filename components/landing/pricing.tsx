@@ -7,7 +7,7 @@ import { BrandSpotlightCard } from "@/components/landing/brand-spotlight-card";
 import { SectionEyebrow } from "@/components/landing/section-eyebrow";
 import { cn } from "@/lib/utils";
 
-const PLANS = [
+export const PLANS = [
   {
     name: "Free",
     price: "$0",

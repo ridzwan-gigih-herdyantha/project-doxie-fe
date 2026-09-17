@@ -13,6 +13,7 @@ import {
 import { LandingFooter } from "@/components/landing/landing-footer";
 import { BrandPalette, CopyTextButton } from "./_components/press-kit";
 import { ScreenshotKit } from "./_components/screenshot-kit";
+import { pageMetadata } from "@/lib/seo";
 
 /** List the bundled screenshot files served from /public-screenshots. */
 async function getScreenshots(): Promise<string[]> {
@@ -25,11 +26,12 @@ async function getScreenshots(): Promise<string[]> {
   }
 }
 
-export const metadata: Metadata = {
-  title: "Press · DoxieAI",
+export const metadata: Metadata = pageMetadata({
+  title: "Press & Media Kit",
   description:
     "Media kit, brand assets, and press resources for Doxie AI — logos, palette, screenshots, and company boilerplate.",
-};
+  path: "/press",
+});
 
 // Top-nav links are the sections that live on THIS page.
 const PAGE_NAV: NavLink[] = [

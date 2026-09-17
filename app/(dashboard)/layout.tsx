@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
 
@@ -9,6 +10,11 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { getToken, getUser } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 
+// Private, per-user screens: keep them out of search results.
+export const metadata: Metadata = {
+  title: "Dashboard",
+  robots: { index: false, follow: false },
+};
 
 export default async function DashboardLayout({
   children,

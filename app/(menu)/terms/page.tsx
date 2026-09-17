@@ -9,12 +9,14 @@ import {
 } from "@/components/landing/landing-navbar";
 import { LandingFooter } from "@/components/landing/landing-footer";
 import { TermsToc } from "./_components/terms-toc";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Terms of Service · DoxieAI",
+export const metadata: Metadata = pageMetadata({
+  title: "Terms of Service",
   description:
     "The legal terms governing your access to and use of the Doxie AI platform and services.",
-};
+  path: "/terms",
+});
 
 // Top-nav links are the sections that live on THIS page.
 const PAGE_NAV: NavLink[] = [

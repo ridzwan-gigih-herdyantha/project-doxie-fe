@@ -27,12 +27,14 @@ import {
 } from "@/components/landing/landing-navbar";
 import { LandingFooter } from "@/components/landing/landing-footer";
 import { PrivacyToc } from "./_components/privacy-toc";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy · DoxieAI",
+export const metadata: Metadata = pageMetadata({
+  title: "Privacy Policy",
   description:
     "How Doxie collects, uses, stores, and protects your data — built on transparency and zero-knowledge security.",
-};
+  path: "/privacy",
+});
 
 // Top-nav links are the sections that live on THIS page.
 const PAGE_NAV: NavLink[] = [

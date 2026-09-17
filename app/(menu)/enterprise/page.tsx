@@ -19,12 +19,14 @@ import {
 import { LandingFooter } from "@/components/landing/landing-footer";
 import { DemoForm } from "./_components/demo-form";
 import { HeroShowcase } from "./_components/hero-showcase";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Enterprise · DoxieAI",
+export const metadata: Metadata = pageMetadata({
+  title: "Enterprise",
   description:
     "Scale your document intelligence with industrial-grade security, dedicated infrastructure, and 24/7 priority support.",
-};
+  path: "/enterprise",
+});
 
 // Top-nav links are the sections that live on THIS page.
 const PAGE_NAV: NavLink[] = [

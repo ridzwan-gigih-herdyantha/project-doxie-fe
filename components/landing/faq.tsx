@@ -4,7 +4,7 @@ import AnimatedContent from "@/components/AnimatedContent";
 import { BrandSpotlightCard } from "@/components/landing/brand-spotlight-card";
 import { SectionEyebrow } from "@/components/landing/section-eyebrow";
 
-const FAQS = [
+export const FAQS = [
   {
     q: "What file types are supported?",
     a: "For now, Doxie only supports PDF files. We're working on more formats — Word, spreadsheets, and slides are on the way.",

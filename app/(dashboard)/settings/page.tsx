@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
@@ -23,6 +24,8 @@ function PlaceholderTab({ title }: { title: string }) {
     </Card>
   );
 }
+
+export const metadata: Metadata = { title: "Settings" };
 
 export default async function SettingsPage({
   searchParams,
