@@ -88,37 +88,27 @@ export function WhyDoxie() {
               <div>
                 <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-brand px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-wide text-brand-foreground">
                   <ShieldCheck className="size-3.5" />
-                  Security first
+                  Privacy-minded
                 </span>
                 <h3 className="mt-5 text-2xl font-semibold sm:text-3xl">
-                  Enterprise-grade privacy by default
+                  Your documents stay yours
                 </h3>
                 <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
-                  Your documents are never used to train models. SOC-2 compliant
-                  infrastructure with end-to-end encryption on every file you upload.
+                  Uploads are stored only to answer your questions and are never
+                  used to train models. Access is scoped to your account.
                 </p>
               </div>
 
               <EncryptedDocGraphic />
-
-              <div className="mt-4 flex flex-wrap gap-2">
-                {["SOC-2", "E2E Encrypted", "GDPR Ready"].map((b) => (
-                  <span
-                    key={b}
-                    className="rounded-full border border-brand/20 bg-brand/5 px-3 py-1 text-xs font-medium text-foreground/80"
-                  >
-                    {b}
-                  </span>
-                ))}
-              </div>
             </BrandSpotlightCard>
           </AnimatedContent>
 
-          {/* Instant processing */}
+          {/* Background processing */}
           <AnimatedContent distance={50} duration={0.7} delay={0.1}>
             <BrandSpotlightCard className="h-full p-7">
-              <Feature icon={Zap} title="Instant processing">
-                Proprietary OCR pipeline ingests 100+ pages in under five seconds.
+              <Feature icon={Zap} title="Background processing">
+                PDFs are parsed page by page in a background queue, so you can
+                keep working while large files finish ingesting.
               </Feature>
             </BrandSpotlightCard>
           </AnimatedContent>

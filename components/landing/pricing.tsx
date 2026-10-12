@@ -27,7 +27,7 @@ const PLANS = [
       "GPT-4o, Claude 3.5 & Gemini",
       "Priority processing",
     ],
-    cta: "Start 7-day free trial",
+    cta: "Get started",
     href: "/register",
     featured: true,
   },
@@ -53,12 +53,13 @@ export function Pricing() {
       <div className="mx-auto max-w-5xl px-6 py-24">
         <AnimatedContent distance={40} duration={0.7}>
           <div className="mx-auto mb-12 max-w-md text-center">
-            <SectionEyebrow>Pricing</SectionEyebrow>
+            <SectionEyebrow>Sample pricing</SectionEyebrow>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              Simple, transparent pricing
+              Illustrative plans
             </h2>
             <p className="mt-3 text-sm text-muted-foreground">
-              Start for free and upgrade as your library grows.
+              Doxie is a personal project, these tiers show how a hosted
+              version could be packaged. Billing is not live.
             </p>
           </div>
         </AnimatedContent>

@@ -3,7 +3,6 @@ import { Hero } from "@/components/landing/hero";
 import { ModelsMarquee } from "@/components/landing/models-marquee";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { WhyDoxie } from "@/components/landing/why-doxie";
-import { Testimonials } from "@/components/landing/testimonials";
 import { Pricing } from "@/components/landing/pricing";
 import { Faq } from "@/components/landing/faq";
 import { CtaBand } from "@/components/landing/cta-band";
@@ -20,7 +19,6 @@ export default function LandingPage() {
           <ModelsMarquee />
           <HowItWorks />
           <WhyDoxie />
-          <Testimonials />
           <Pricing />
           <Faq />
           <CtaBand />
