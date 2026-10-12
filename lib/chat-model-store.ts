@@ -14,8 +14,8 @@ export interface ChatModel {
 
 export const CHAT_MODELS: ChatModel[] = [
   { id: "gemini-2.5-flash", label: "Gemini 2.5 Flash" , status: "active"},
-  { id: "gpt-4o", label: "ChatGPT 4.0", status: "inactive" },
-  { id: "claude-3-5-sonnet-20241022", label: "Claude 3.5 Sonnet", status: "inactive" },
+  { id: "gpt-4o", label: "ChatGPT 4.0 (coming soon)", status: "inactive" },
+  { id: "claude-3-5-sonnet-20241022", label: "Claude 3.5 Sonnet (coming soon)", status: "inactive" },
 ];
 
 let modelId: string = CHAT_MODELS[0].id;
