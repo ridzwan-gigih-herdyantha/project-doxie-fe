@@ -10,12 +10,14 @@ import {
 } from "@/components/landing/landing-navbar";
 import { LandingFooter } from "@/components/landing/landing-footer";
 import { BlogFeed } from "./_components/blog-feed";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Blog · DoxieAI",
+export const metadata: Metadata = pageMetadata({
+  title: "Blog",
   description:
     "Insights on LLMs, document engineering, and product updates from the Doxie team.",
-};
+  path: "/blog",
+});
 
 const PAGE_NAV: NavLink[] = [
   { label: "Features", href: "/#features" },

@@ -25,12 +25,14 @@ import {
 } from "@/components/landing/landing-navbar";
 import { SystemStatus } from "@/app/(auth)/system-status";
 import { DocsSidebarNav } from "./_components/docs-sidebar-nav";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "API Docs · DoxieAI",
+export const metadata: Metadata = pageMetadata({
+  title: "API Documentation",
   description:
     "The enterprise-grade API for intelligent document processing — extract, chat, and reason with your unstructured data.",
-};
+  path: "/api-documentation",
+});
 
 const PAGE_NAV: NavLink[] = [
   { label: "Features", href: "/#features" },

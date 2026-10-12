@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 
+import { pageMetadata } from "@/lib/seo";
+
 import { RegisterForm } from "@/app/(auth)/register/register-form";
 import {
   CardContent,
@@ -11,9 +13,12 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { GoogleAuthButton } from "@/app/(auth)/google-auth-button";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Sign Up",
-};
+  description:
+    "Create a free DoxieAI account and start chatting with your PDFs using GPT-4o, Claude, and Gemini.",
+  path: "/register",
+});
 
 export default function RegisterPage() {
   return (

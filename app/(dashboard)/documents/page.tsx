@@ -1,6 +1,9 @@
+import type { Metadata } from "next";
 import DocumentCard from "../dashboard/_components/document-card";
 import UploadDocumentCard from "../dashboard/_components/upload-document-card";
 import { listDocuments } from "./action";
+
+export const metadata: Metadata = { title: "Documents" };
 
 export default async function DocumentsPage() {
   const result = await listDocuments();

@@ -28,12 +28,14 @@ import {
 import { LandingFooter } from "@/components/landing/landing-footer";
 import { BrandAurora } from "@/components/landing/brand-aurora";
 import { GlowShield } from "./_components/glow-shield";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Security · DoxieAI",
+export const metadata: Metadata = pageMetadata({
+  title: "Security",
   description:
     "Military-grade encryption, rigorous compliance, and multi-layered infrastructure — built on a foundation of absolute trust.",
-};
+  path: "/security",
+});
 
 const PAGE_NAV: NavLink[] = [
   { label: "Home", href: "/" },

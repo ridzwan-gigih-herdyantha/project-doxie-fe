@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Hanken_Grotesk, JetBrains_Mono, Inter } from "next/font/google";
 
@@ -12,6 +12,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { CheckCircle2Icon } from "lucide-react";
 
 import { serverEnv } from "@/lib/env";
+import { SITE, pageMetadata } from "@/lib/seo";
 
 const hankenGrotesk = Hanken_Grotesk({
   subsets: ["latin"],
@@ -58,9 +59,42 @@ const liberationSerif = localFont({
   display: "swap",
 });
 
+const defaultPageMetadata = pageMetadata({
+  title: SITE.title,
+  description: SITE.description,
+});
+
 export const metadata: Metadata = {
-  title: "DoxieAI",
-  description: "Next.js frontend for the Doxie Laravel API.",
+  ...defaultPageMetadata,
+  metadataBase: new URL(SITE.url),
+  title: {
+    default: SITE.title,
+    template: `%s · ${SITE.name}`,
+  },
+  applicationName: SITE.name,
+  keywords: [...SITE.keywords],
+  authors: [{ name: SITE.name, url: SITE.url }],
+  creator: SITE.name,
+  publisher: SITE.name,
+  category: "technology",
+  referrer: "origin-when-cross-origin",
+  formatDetection: { email: false, address: false, telephone: false },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: SITE.themeColor,
+  colorScheme: "dark",
 };
 
 export default function RootLayout({

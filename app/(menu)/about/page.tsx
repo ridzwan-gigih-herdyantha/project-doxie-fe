@@ -18,12 +18,14 @@ import {
 import { LandingFooter } from "@/components/landing/landing-footer";
 import { CommandCenter } from "./_components/command-center";
 import { BrandAurora } from "@/components/landing/brand-aurora";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "About · DoxieAI",
+export const metadata: Metadata = pageMetadata({
+  title: "About",
   description:
     "Doxie transforms static data into actionable wisdom — building the ultimate cognitive layer for the professional world.",
-};
+  path: "/about",
+});
 
 // Top-nav links are the sections that live on THIS page.
 const PAGE_NAV: NavLink[] = [

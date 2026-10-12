@@ -21,11 +21,14 @@ import {
 } from "@/components/landing/landing-navbar";
 import { LandingFooter } from "@/components/landing/landing-footer";
 import { HelpFaq } from "./_components/help-faq";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Help & Support · DoxieAI",
-  description: "Find answers, browse guides, or reach out — we're here to help.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Help & Support",
+  description:
+    "Find answers, browse guides, or reach out — we're here to help.",
+  path: "/help",
+});
 
 const PAGE_NAV: NavLink[] = [
   { label: "Home", href: "/" },

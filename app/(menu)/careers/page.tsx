@@ -7,12 +7,14 @@ import {
   type NavLink,
 } from "@/components/landing/landing-navbar";
 import { LandingFooter } from "@/components/landing/landing-footer";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Careers · DoxieAI",
+export const metadata: Metadata = pageMetadata({
+  title: "Careers",
   description:
     "We're a small team building big things at the intersection of AI and technical documentation. Join the mission.",
-};
+  path: "/careers",
+});
 
 const PAGE_NAV: NavLink[] = [
   { label: "Features", href: "/#features" },
