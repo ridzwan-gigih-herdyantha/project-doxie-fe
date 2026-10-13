@@ -12,6 +12,8 @@ import { LandingFooter } from "@/components/landing/landing-footer";
 import { BrandClickSpark } from "@/components/landing/brand-click-spark";
 import { SITE, absoluteUrl, jsonLd, pageMetadata } from "@/lib/seo";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   ...pageMetadata({
     title: SITE.title,
